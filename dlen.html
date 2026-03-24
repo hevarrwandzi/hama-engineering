@@ -3,64 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENG. Dlen Ismael Hamid</title>
+    <title>ENG. Dlen Ismael Hamid | Profile</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             padding: 20px;
+        }
+        .profile-card {
+            background-color: #121212;
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
         h1 {
-            font-size: 32px;
-            color: #1f2f46;
+            color: #ffcc00;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
         }
-        .content {
-            max-width: 900px;
-            margin: auto;
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        .section-label {
+            color: #ffcc00;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .divider {
+            height: 1px;
+            background-color: #333;
+            margin-bottom: 20px;
+        }
+        .content-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .contact-box {
+            border: 1px solid #ffcc00;
             padding: 20px;
-            background: white;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        .profile-img {
-            width: 100%;
-            height: 1200px;
-            background-image: url('d:\WhatsApp Image 2026-03-23 at 12.33.39 PM.jpeg');
-            background-size: cover;
-            background-position: center;
-        }
-        .bio {
+            border-radius: 8px;
             margin-top: 20px;
-            font-size: 18px;
-            line-height: 1.8;
         }
-        .contact-info {
-            margin-top: 30px;
-            font-size: 16px;
+        .contact-box p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+        }
+        .contact-box strong {
+            color: #ffcc00;
+            margin-right: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="content">
-        <div class="profile-img"></div>
+    <div class="profile-card">
         <h1>ENG. Dlen Ismael Hamid</h1>
-        <p>Civil Consultant Engineer </p>
-        <div class="bio">
-            <h2>Biography</h2>
-            <p>
-                ENG. Dlen Ismael Hamid has over 20 years of experience in structural engineering. He specializes in ...
-            </p>
-            <h2>Work Experience</h2>
-            <p>
-                He has worked on several large-scale projects, including ...
-            </p>
-        </div>
-        <div class="contact-info">
-            <h3>Contact Information</h3>
-            <p>Email: dilshad@engineering.com</p>
-            <p>Phone: +964 751 505 0551</p>
+        <p class="subtitle">Civil Consultant Engineer</p>
+
+        <span class="section-label">Biography</span>
+        <div class="divider"></div>
+        <p class="content-text">
+            ENG. Dlen Ismael Hamid has over 20 years of expertise in civil and structural engineering. He specializes in large-scale infrastructure planning, construction management, and urban development within the Kurdistan Region.
+        </p>
+
+        <span class="section-label">Key Projects</span>
+        <div class="divider"></div>
+        <p class="content-text">
+            Has successfully managed and consulted on various urban development and infrastructure projects, ensuring safety, efficiency, and adherence to international standards.
+        </p>
+
+        <div class="contact-box">
+            <span class="section-label" style="margin-bottom: 15px;">Contact</span>
+            <p><strong>Email:</strong> info@engineering.com</p>
+            <p><strong>Phone:</strong> +964 751 505 0551</p>
         </div>
     </div>
 </body>

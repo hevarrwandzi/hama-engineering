@@ -96,6 +96,17 @@
             border-radius: 20px;
             cursor: pointer;
             font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        /* MOBILE FIXES */
+        @media (max-width: 600px) {
+            body { padding: 15px; }
+            .profile-card { padding: 25px; }
+            h1 { font-size: 1.8rem; }
+            .subtitle { font-size: 1rem; }
+            #theme-toggle { top: 10px; right: 10px; padding: 6px 12px; font-size: 0.8rem; }
         }
     </style>
 </head>

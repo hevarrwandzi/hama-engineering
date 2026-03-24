@@ -1,135 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prof. Dr. Dilshad K. Jaf</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zayada | Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --accent: #ff7300;
+            --divider: #ddd;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        [data-theme="dark"] {
+            --bg-color: #0a0a0a;
+            --card-bg: #121212;
+            --text-color: #e0e0e0;
+            --accent: #ffcc00;
+            --divider: #333;
+        }
 
-<style>
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #eef2f7;
-    margin: 0;
-}
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: 0.3s;
+        }
+        .profile-card {
+            background-color: var(--card-bg);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: var(--accent);
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        .section-label {
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .divider {
+            height: 1px;
+            background-color: var(--divider);
+            margin-bottom: 20px;
+        }
+        .content-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .contact-box {
+            border: 1px solid var(--accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .contact-box p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+        }
+        .contact-box strong {
+            color: var(--accent);
+            margin-right: 10px;
+        }
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
 
-/* Main container */
-.container {
-    max-width: 1000px;
-    margin: 50px auto;
-    background: white;
-    display: flex;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-/* Left side (image) */
-.left {
-    width: 40%;
-    background: url('profile.jpg') no-repeat center/cover;
-}
-
-/* Right side (content) */
-.right {
-    width: 60%;
-    padding: 30px;
-}
-
-/* Header */
-h1 {
-    margin-top: 0;
-    color: #1f2f46;
-}
-
-.subtitle {
-    color: #666;
-    margin-bottom: 20px;
-}
-
-/* Sections */
-.section {
-    margin-bottom: 25px;
-}
-
-.section h2 {
-    font-size: 18px;
-    color: #1f2f46;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 5px;
-}
-
-.section p {
-    line-height: 1.7;
-    color: #444;
-}
-
-/* Contact */
-.contact {
-    background: #1f2f46;
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-}
-
-.contact p {
-    margin: 5px 0;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-
-    .left {
-        width: 100%;
-        height: 250px;
-    }
-
-    .right {
-        width: 100%;
-    }
-}
-</style>
-
+        /* MOBILE FIXES */
+        @media (max-width: 600px) {
+            body { padding: 15px; }
+            .profile-card { padding: 25px; }
+            h1 { font-size: 1.8rem; }
+            .subtitle { font-size: 1rem; }
+            #theme-toggle { top: 10px; right: 10px; padding: 6px 12px; font-size: 0.8rem; }
+        }
+    </style>
 </head>
 <body>
+    <button id="theme-toggle">🌓 Toggle Theme</button>
+    <div class="profile-card">
+        <h1>Zayada</h1>
+        <p class="subtitle">Technical Specialist</p>
 
-<div class="container">
+        <span class="section-label">Biography</span>
+        <div class="divider"></div>
+        <p class="content-text">
+            Zayada is an integral part of the technical team, ensuring that all engineering projects meet the highest standards of quality and efficiency.
+        </p>
 
-    <div class="left"></div>
+        <span class="section-label">Expertise</span>
+        <div class="divider"></div>
+        <p class="content-text">
+            Expert in technical evaluation and project quality control across multiple engineering domains.
+        </p>
 
-    <div class="right">
-        <h1>Prof. Dr. Dilshad K. Jaf</h1>
-        <p class="subtitle">Structural Consultant Engineer</p>
-
-        <div class="section">
-            <h2>Biography</h2>
-            <p>
-                Prof. Dr. Dilshad K. Jaf has over 45 years of experience in structural engineering.
-                He specializes in structural design, supervision, and consulting for major construction projects.
-            </p>
+        <div class="contact-box">
+            <span class="section-label" style="margin-bottom: 15px;">Contact</span>
+            <p><strong>Email:</strong> info@engineering.com</p>
+            <p><strong>Phone:</strong> +964 751 505 0551</p>
         </div>
-
-        <div class="section">
-            <h2>Work Experience</h2>
-            <p>
-                Key projects include Boulevard, Empire Square, Edition, Erbil Media City,
-                Qaiwan City, and Future Eyes.
-            </p>
-        </div>
-
-        <div class="section contact">
-            <h2>Contact</h2>
-            <p>Email: dilshad@engineering.com</p>
-            <p>Phone: +964 751 505 0551</p>
-        </div>
-
     </div>
 
-</div>
+    <script>
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('hama-theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
 
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('hama-theme', next);
+        });
+    </script>
 </body>
 </html>

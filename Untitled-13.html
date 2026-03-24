@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Dilshad K. Jaf Engineering Consultancy Bureau</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#f4f6f9;color:#333;}
+
+/* HEADER */
+header{background:#1f2f46;color:white;padding:20px 40px;}
+.header-container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;}
+.logo img{height:60px;}
+.title{text-align:center;flex:1;}
+.title h1{font-size:26px;}
+.location{font-size:14px;text-align:right;}
+
+/* NAV */
+nav{background:#ff7300;text-align:center;padding:12px;position:sticky;top:0;z-index:10;}
+nav a{color:white;margin:0 15px;font-weight:600;text-decoration:none;}
+nav a:hover{color:#ff9800;}
+
+/* HERO */
+.hero {
+  position: relative;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 20px;
+  overflow: hidden;
+}
+#bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+.hero h2 {
+  font-size: 38px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+.hero p {
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+.btn {
+  background: #ff9800;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+.btn:hover { background: #e68900; }
+
+/* SECTIONS */
+section{padding:70px 60px;}
+section h2{text-align:center;margin-bottom:40px;font-size:32px;color:#1f2f46;}
+
+/* SERVICES */
+.services{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px;}
+.service-box{
+  background:#ff7300;
+  padding:30px;
+  border-radius:10px;
+  text-align:center;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  transition:0.4s ease;
+  cursor:pointer;
+  text-decoration:none;
+  color:black;
+}
+.service-box:hover{
+  transform:translateY(-8px) scale(1.03);
+  box-shadow:0 15px 25px rgba(0,0,0,0.2);
+  background:#e68900;
+  color:black;
+}
+
+/* ABOUT */
+.about p{max-width:800px;margin:auto;text-align:center;line-height:1.8;}
+
+/* TEAM */
+.team-members {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.team-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ff7300;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+}
+
+.team-card:hover {
+  transform: translateY(-10px);
+}
+
+.team-image {
+  width: 100%;
+  height: 350px;
+  background-size: cover;
+  background-position: center;
+}
+
+.team-info {
+  padding: 15px;
+  text-align: center;
+}
+
+.team-info h3 {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.team-info p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Optional: Add hover effect for team image */
+.team-card:hover .team-image {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+/* CONTACT */
+.contact form{max-width:500px;margin:auto;display:flex;flex-direction:column;gap:15px;}
+.contact input,.contact textarea{padding:12px;border-radius:6px;border:1px solid #ccc;}
+.contact button{padding:12px;background:#ff9800;color:white;border:none;border-radius:6px;font-weight:600;cursor:pointer;}
+.contact button:hover{background:#e68900;}
+
+/* FOOTER */
+footer{background:#1f2f46;color:white;text-align:center;padding:25px;margin-top:40px;}
+
+/* WHATSAPP */
+.whatsapp{position:fixed;bottom:20px;right:20px;background:#25D366;color:white;font-size:30px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:50%;text-decoration:none;box-shadow:0 8px 20px rgba(0,0,0,0.25);transition:0.3s;}
+.whatsapp:hover{transform:scale(1.1);}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="header-container">
+<div class="logo"><img src="c:\Users\MIQDAD\Desktop\logo-removebg-preview (2).png" alt="Logo"></div>
+<div class="title"><h1>Dr. Dilshad K. Jaf</h1><p>Engineering Consultancy Bureau</p></div>
+<div class="location">📍 Erbil – Kurdistan – Iraq<br>Raste.Qr - Bzhang Building</div>
+</div>
+</header>
+
+<nav>
+<a href="#">Home</a>
+<a href="#services">Services</a>
+<a href="#about">About</a>
+<a href="#team">Team</a>
+<a href="#contact">Contact</a>
+</nav>
+
+<section class="hero">
+  <video autoplay muted loop id="bg-video">
+    <source src="c:\Users\MIQDAD\Downloads\WhatsApp Video 2026-03-11 at 4.35.41 PM.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <h2>Professional Engineering Consultancy</h2>
+  <p>Trusted engineering solutions across Kurdistan Region.</p>
+  <a href="#contact" class="btn">Contact Us</a>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+<h2>Our Services</h2>
+<div class="services">
+
+<a href="civil.html" class="service-box">
+  <h3>🏗 Civil Engineering</h3>
+  <p>Construction and infrastructure engineering.</p>
+</a>
+
+<a href="structural.html" class="service-box">
+  <h3>🏢 Structural Engineering</h3>
+  <p>Building stability and structural design.</p>
+</a>
+
+<a href="electrical.html" class="service-box">
+  <h3>⚡ Electrical Engineering</h3>
+  <p>Electrical systems and power design.</p>
+</a>
+
+<a href="mechanical.html" class="service-box">
+  <h3>⚙ Mechanical Engineering</h3>
+  <p>Industrial mechanical systems.</p>
+</a>
+
+<a href="architecture.html" class="service-box">
+  <h3>📐 Architectural Design</h3>
+  <p>Modern building planning and architecture.</p>
+</a>
+
+<a href="plumbing.html" class="service-box">
+  <h3>🚰 Plumbing Engineering</h3>
+  <p>Water supply and plumbing systems.</p>
+</a>
+
+<a href="hvac.html" class="service-box">
+  <h3>❄️ HVAC Engineering</h3>
+  <p>Heating, Ventilation, and Air Conditioning systems.</p>
+</a>
+
+<a href="management.html" class="service-box">
+  <h3>📊 Management Department</h3>
+  <p>Project management, planning, and supervision.</p>
+</a>
+
+<a href="software.html" class="service-box">
+  <h3>💻 Software Engineering</h3>
+  <p>Software development and IT solutions.</p>
+</a>
+
+<a href="oilandgas.html" class="service-box">
+  <h3>🛢 Oil & Gas Services</h3>
+  <p>Engineering and consultancy for oil and gas projects.</p>
+</a>
+
+<a href="survey.html" class="service-box">
+  <h3>📏 Survey Engineering</h3>
+  <p>Land surveying, mapping, and measurement services.</p>
+</a>
+
+<a href="training.html" class="service-box">
+  <h3>🎓 Courses & Training</h3>
+  <p>Professional training programs and workshops.</p>
+</a>
+
+</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about">
+<h2>About Us</h2>
+<p>
+Dr. Dilshad K. Jaf Engineering Consultancy Bureau provides expert engineering services
+in civil, structural, electrical, mechanical, architectural, plumbing, and HVAC fields.
+We deliver innovative, safe, and reliable solutions for projects across the Kurdistan Region.
+</p>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <h2>Our Team</h2>
+  <div class="team-members">
+
+    <!-- Team Member 1 -->
+    <a href="dilshad.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('d:\WhatsApp Image 2026-03-12 at 4.00.18 PM (1).jpeg');"></div>
+      <div class="team-info">
+        <h3>Prof. Dr. Dilshad K. Jaf</h3>
+        <p>Structural Consultant Engineer</p>
+      </div>
+    </a>
+
+    <!-- Team Member 2 -->
+    <a href="younis.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('d:\WhatsApp Image 2026-03-12 at 5.09.58 PM.jpeg');"></div>
+      <div class="team-info">
+        <h3>Asst. Prof. Dr. Younis Khoshnaw</h3>
+        <p>Mechanical Consultant Engineer</p>
+      </div>
+    </a>
+
+    <!-- Team Member 3 -->
+    <a href="dlen.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('d:\WhatsApp Image 2026-03-23 at 12.33.39 PM.jpeg');"></div>
+      <div class="team-info">
+        <h3>ENG. Dlen Ismael Hamid</h3>
+        <p>Civil Consultant Engineer</p>
+      </div>
+    </a>
+
+    <!-- Team Member 4 -->
+    <a href="towana.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('d:\WhatsApp Image 2026-03-12 at 1.25.44 PM.jpeg');"></div>
+      <div class="team-info">
+        <h3>ENG. Towana Salahaddin Husein</h3>
+        <p>Consulting Electrical Engineer</p>
+      </div>
+    </a>
+
+    <!-- Team Member 5 -->
+    <a href="sarah.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('images/team5.jpg');"></div>
+      <div class="team-info">
+        <h3>Engineer Sarah</h3>
+        <p>Architect</p>
+      </div>
+    </a>
+
+    <!-- Team Member 6 -->
+    <a href="khalid.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('images/team6.jpg');"></div>
+      <div class="team-info">
+        <h3>Engineer Khalid</h3>
+        <p>Plumbing Engineer</p>
+      </div>
+    </a>
+
+    <!-- Team Member 7 -->
+    <a href="lina.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('images/team7.jpg');"></div>
+      <div class="team-info">
+        <h3>Engineer Lina</h3>
+        <p>HVAC Specialist</p>
+      </div>
+    </a>
+
+    <!-- Team Member 8 -->
+    <a href="omar.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('images/team8.jpg');"></div>
+      <div class="team-info">
+        <h3>Engineer Omar</h3>
+        <p>Structural Engineer</p>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+  </div>
+</section>
+
+
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+<h2>Contact Us</h2>
+<form action="mailto:info@engineering.com" method="post" enctype="text/plain">
+<input type="text" name="name" placeholder="Your Name" required>
+<input type="email" name="email" placeholder="Your Email" required>
+<textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+<button type="submit">Send Message</button>
+</form>
+<p style="text-align:center;margin-top:20px;">
+📍 Erbil – Kurdistan – Iraq<br>
+📞 +964 751 505 0551<br>
+📧 info@engineering.com<br>
+
+</p>
+</section>
+
+<footer>
+<p>© 2026 Dr. Dilshad K. Jaf Engineering Consultancy Bureau</p>
+</footer>
+
+<a href="https://wa.me/9647515050551" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+
+</body>
+</html>

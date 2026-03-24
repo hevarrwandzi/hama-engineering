@@ -1,32 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prof. Dr. Dilshad K. Jaf | Profile</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --accent: #ff7300;
+            --divider: #ddd;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0a0a0a;
+            --card-bg: #121212;
+            --text-color: #e0e0e0;
+            --accent: #ffcc00;
+            --divider: #333;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #0a0a0a;
-            color: #e0e0e0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            transition: 0.3s;
         }
         .profile-card {
-            background-color: #121212;
+            background-color: var(--card-bg);
             max-width: 800px;
             width: 100%;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         h1 {
-            color: #ffcc00;
+            color: var(--accent);
             font-size: 2.2rem;
             margin-bottom: 5px;
         }
@@ -36,7 +53,7 @@
             margin-bottom: 30px;
         }
         .section-label {
-            color: #ffcc00;
+            color: var(--accent);
             font-size: 0.8rem;
             font-weight: 700;
             letter-spacing: 1.5px;
@@ -46,7 +63,7 @@
         }
         .divider {
             height: 1px;
-            background-color: #333;
+            background-color: var(--divider);
             margin-bottom: 20px;
         }
         .content-text {
@@ -55,7 +72,7 @@
             margin-bottom: 30px;
         }
         .contact-box {
-            border: 1px solid #ffcc00;
+            border: 1px solid var(--accent);
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
@@ -65,12 +82,25 @@
             font-size: 0.95rem;
         }
         .contact-box strong {
-            color: #ffcc00;
+            color: var(--accent);
             margin-right: 10px;
+        }
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
+    <button id="theme-toggle">🌓 Toggle Theme</button>
     <div class="profile-card">
         <h1>Prof. Dr. Dilshad K. Jaf</h1>
         <p class="subtitle">Structural Consultant Engineer</p>
@@ -93,5 +123,18 @@
             <p><strong>Phone:</strong> +964 751 505 0551</p>
         </div>
     </div>
+
+    <script>
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('hama-theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('hama-theme', next);
+        });
+    </script>
 </body>
 </html>

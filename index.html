@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -71,7 +71,7 @@ nav a:hover{color:#ffdeab;}
   color: var(--nav-bg);
 }
 
-/* HERO SECTION - REBUILT FOR STABILITY 🎥🥊 */
+/* HERO SECTION */
 .hero-section {
   background: var(--header-bg);
   padding: 40px 20px;
@@ -172,7 +172,7 @@ section h2{text-align:center;margin-bottom:40px;font-size:28px;color:var(--secti
 
 .team-image {
   width: 100%;
-  height: 300px;
+  height: 350px;
   background-size: cover;
   background-position: center;
 }
@@ -190,6 +190,15 @@ section h2{text-align:center;margin-bottom:40px;font-size:28px;color:var(--secti
 .team-info p {
   font-size: 14px;
   opacity: 0.9;
+}
+
+/* Manager top card */
+.team-card.top-card {
+  grid-column: 1 / -1; /* full width */
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+  transform: scale(1.05);
+  border: 3px solid #ff7300;
 }
 
 /* CONTACT */
@@ -234,10 +243,6 @@ footer{background:var(--footer-bg);color:white;text-align:center;padding:30px 20
 <a href="#about">About</a>
 <a href="#team">Team</a>
 <a href="#contact">Contact</a>
-<button id="theme-toggle">
-    <span id="theme-icon">🌙</span>
-    <span id="theme-text">Dark Mode</span>
-</button>
 </nav>
 
 <section class="hero-section">
@@ -263,57 +268,46 @@ footer{background:var(--footer-bg);color:white;text-align:center;padding:30px 20
   <h3>🏗 Civil Engineering</h3>
   <p>Construction and infrastructure engineering.</p>
 </a>
-
 <a href="structural.html" class="service-box">
   <h3>🏢 Structural Engineering</h3>
   <p>Building stability and structural design.</p>
 </a>
-
 <a href="electrical.html" class="service-box">
   <h3>⚡ Electrical Engineering</h3>
   <p>Electrical systems and power design.</p>
 </a>
-
 <a href="mechanical.html" class="service-box">
   <h3>⚙ Mechanical Engineering</h3>
   <p>Industrial mechanical systems.</p>
 </a>
-
 <a href="architecture.html" class="service-box">
   <h3>📐 Architectural Design</h3>
   <p>Modern building planning and architecture.</p>
 </a>
-
 <a href="plumbing.html" class="service-box">
   <h3>🚰 Plumbing Engineering</h3>
   <p>Water supply and plumbing systems.</p>
 </a>
-
 <a href="hvac.html" class="service-box">
   <h3>❄️ HVAC Engineering</h3>
   <p>Heating, Ventilation, and Air Conditioning systems.</p>
 </a>
-
 <a href="management.html" class="service-box">
   <h3>📊 Management Department</h3>
   <p>Project management, planning, and supervision.</p>
 </a>
-
 <a href="software.html" class="service-box">
   <h3>💻 Software Engineering</h3>
   <p>Software development and IT solutions.</p>
 </a>
-
 <a href="oilandgas.html" class="service-box">
   <h3>🛢 Oil & Gas Services</h3>
   <p>Engineering and consultancy for oil and gas projects.</p>
 </a>
-
 <a href="survey.html" class="service-box">
   <h3>📏 Survey Engineering</h3>
   <p>Land surveying, mapping, and measurement services.</p>
 </a>
-
 <a href="training.html" class="service-box">
   <h3>🎓 Courses & Training</h3>
   <p>Professional training programs and workshops.</p>
@@ -337,25 +331,36 @@ We deliver innovative, safe, and reliable solutions for projects across the Kurd
   <h2>Our Team</h2>
   <div class="team-members">
 
-    <!-- Team Member 1 -->
-    <a href="dilshad.html" target="_blank" class="team-card">
+    <!-- Manager: full-width top card -->
+    <a href="dilshad.html" target="_blank" class="team-card top-card">
       <div class="team-image" style="background-image: url('dilshad.jpeg');"></div>
       <div class="team-info">
         <h3>Prof. Dr. Dilshad K. Jaf</h3>
-        <p>Structural Consultant Engineer</p>
+        <p> Structural Consultant Engineer</p>
+        <p>(Executive Manager)</p>
+        
       </div>
     </a>
 
-    <!-- Team Member 2 -->
+    <!-- Other team members -->
     <a href="younis.html" target="_blank" class="team-card">
       <div class="team-image" style="background-image: url('younis.jpeg');"></div>
       <div class="team-info">
         <h3>Asst. Prof. Dr. Younis Khoshnaw</h3>
         <p>Mechanical Consultant Engineer</p>
+        <p>(Founder)</p>
       </div>
     </a>
+<a href="qasim.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('Qasim.jpeg');"></div>
+      <div class="team-info">
+        <h3>ENG. Qasim M Amen</h3>
+        <p>Consultant Architect Engineer</p>
+        <p>(Founder)</p>
+      </div>
+      
+    </a>
 
-    <!-- Team Member 3 -->
     <a href="dlen.html" target="_blank" class="team-card">
       <div class="team-image" style="background-image: url('building.jpeg');"></div>
       <div class="team-info">
@@ -364,7 +369,6 @@ We deliver innovative, safe, and reliable solutions for projects across the Kurd
       </div>
     </a>
 
-    <!-- Team Member 4 -->
     <a href="towana.html" target="_blank" class="team-card">
       <div class="team-image" style="background-image: url('towana.jpeg');"></div>
       <div class="team-info">
@@ -373,32 +377,26 @@ We deliver innovative, safe, and reliable solutions for projects across the Kurd
       </div>
     </a>
 
-    <!-- Team Member 5 -->
-    <a href="sarah.html" target="_blank" class="team-card">
-      <div class="team-info">
-        <h3>Engineer Sarah</h3>
-        <p>Architect</p>
-      </div>
-    </a>
+    
 
-    <!-- Team Member 6 -->
     <a href="khalid.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('building.jpeg');"></div>
       <div class="team-info">
         <h3>Engineer Khalid</h3>
         <p>Plumbing Engineer</p>
       </div>
     </a>
 
-    <!-- Team Member 7 -->
     <a href="lina.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('building.jpeg');"></div>
       <div class="team-info">
         <h3>Engineer Lina</h3>
         <p>HVAC Specialist</p>
       </div>
     </a>
 
-    <!-- Team Member 8 -->
     <a href="omar.html" target="_blank" class="team-card">
+      <div class="team-image" style="background-image: url('building.jpeg');"></div>
       <div class="team-info">
         <h3>Engineer Omar</h3>
         <p>Structural Engineer</p>
@@ -429,34 +427,6 @@ We deliver innovative, safe, and reliable solutions for projects across the Kurd
 </footer>
 
 <a href="https://wa.me/9647515050551" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
-
-<script>
-    const toggleBtn = document.getElementById('theme-toggle');
-    const themeIcon = document.getElementById('theme-icon');
-    const themeText = document.getElementById('theme-text');
-    const html = document.documentElement;
-
-    const savedTheme = localStorage.getItem('hama-theme') || 'light';
-    setTheme(savedTheme);
-
-    toggleBtn.addEventListener('click', () => {
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-    });
-
-    function setTheme(theme) {
-        html.setAttribute('data-theme', theme);
-        localStorage.setItem('hama-theme', theme);
-        if (theme === 'dark') {
-            themeIcon.textContent = '☀️';
-            themeText.textContent = 'Light Mode';
-        } else {
-            themeIcon.textContent = '🌙';
-            themeText.textContent = 'Dark Mode';
-        }
-    }
-</script>
 
 </body>
 </html>

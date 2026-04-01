@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENG. Adham Mohammed Ahmed | Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --accent: #ff7300;
+            --divider: #ddd;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0a0a0a;
+            --card-bg: #121212;
+            --text-color: #e0e0e0;
+            --accent: #ffcc00;
+            --divider: #333;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: 0.3s;
+        }
+        .profile-card {
+            background-color: var(--card-bg);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: var(--accent);
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        .section-label {
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .divider {
+            height: 1px;
+            background-color: var(--divider);
+            margin-bottom: 20px;
+        }
+        .content-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .contact-box {
+            border: 1px solid var(--accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .contact-box p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+        }
+        .contact-box strong {
+            color: var(--accent);
+            margin-right: 10px;
+        }
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        /* MOBILE FIXES */
+        @media (max-width: 600px) {
+            body { padding: 15px; }
+            .profile-card { padding: 25px; }
+            h1 { font-size: 1.8rem; }
+            .subtitle { font-size: 1rem; }
+            #theme-toggle { top: 10px; right: 10px; padding: 6px 12px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <button id="theme-toggle">🌓 Toggle Theme</button>
+    <div class="profile-card">
+        <h1>ENG. Adham Mohammed Ahmed</h1>
+        <p class="subtitle">Electric Consultant Engineer</p>
+
+        <span class="section-label">Biography</span>
+        <div class="divider"></div>
+        <p class="content-text">
+            ENG. Adham Mohammed Ahmed  has over 20 years of expertise in civil and structural engineering. He specializes in large-scale infrastructure planning, construction management, and urban development within the Kurdistan Region.
+        </p>
+
+        <span class="section-label">Key Projects</span>
+        <div class="divider"></div>
+        <p class="content-text">
+            Has successfully managed and consulted on various urban development and infrastructure projects, ensuring safety, efficiency, and adherence to international standards.
+        </p>
+
+        <div class="contact-box">
+            <span class="section-label" style="margin-bottom: 15px;">Contact</span>
+            <p><strong>Email:</strong> info@engineering.com</p>
+            <p><strong>Phone:</strong> +964 751 505 0551</p>
+        </div>
+    </div>
+
+    <script>
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('hama-theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('hama-theme', next);
+        });
+    </script>
+</body>
+</html>

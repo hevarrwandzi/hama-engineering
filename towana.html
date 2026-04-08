@@ -1,151 +1,373 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENG. Towana Salahaddin Husein | Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --accent: #ff7300;
-            --divider: #ddd;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Member Name — Dr. Dilshad K. Jaf Engineering Consultancy Bureau</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --accent: #e87c2a;
+  --accent-dark: #c96718;
+  --accent-light: #f5a05a;
+  --navy: #0f1e35;
+  --navy-light: #1a2f4a;
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface2: #eeece7;
+  --text: #1a1a1a;
+  --text-muted: #6b6b6b;
+  --border: rgba(0,0,0,0.1);
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+[data-theme="dark"] {
+  --bg: #0b1422;
+  --surface: #111e30;
+  --surface2: #162035;
+  --text: #eef0f4;
+  --text-muted: #8496b0;
+  --border: rgba(255,255,255,0.07);
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--bg); color: var(--text); transition: background var(--transition), color var(--transition); overflow-x: hidden; line-height: 1.6; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
 
-        [data-theme="dark"] {
-            --bg-color: #0a0a0a;
-            --card-bg: #121212;
-            --text-color: #e0e0e0;
-            --accent: #ffcc00;
-            --divider: #333;
-        }
+/* Header */
+header { background: var(--navy); padding: 0 40px; position: relative; overflow: hidden; }
+header::before { content: ''; position: absolute; top: -60px; right: -60px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(232,124,42,0.18) 0%, transparent 70%); pointer-events: none; }
+.header-inner { max-width: 1200px; margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 0; flex-wrap: wrap; }
+.header-logo { display: flex; align-items: center; gap: 14px; }
+.header-logo img { height: 56px; border-radius: 10px; }
+.logo-text h1 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: #fff; line-height: 1.3; }
+.logo-text p { font-size: 0.75rem; color: var(--accent-light); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+.header-location { font-size: 0.78rem; color: rgba(255,255,255,0.6); text-align: right; line-height: 1.8; }
+.header-location strong { color: rgba(255,255,255,0.9); }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            transition: 0.3s;
-        }
-        .profile-card {
-            background-color: var(--card-bg);
-            max-width: 800px;
-            width: 100%;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: var(--accent);
-            font-size: 2.2rem;
-            margin-bottom: 5px;
-        }
-        .subtitle {
-            color: #888;
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-        }
-        .section-label {
-            color: var(--accent);
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            display: block;
-        }
-        .divider {
-            height: 1px;
-            background-color: var(--divider);
-            margin-bottom: 20px;
-        }
-        .content-text {
-            font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-        .contact-box {
-            border: 1px solid var(--accent);
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        .contact-box p {
-            margin: 5px 0;
-            font-size: 0.95rem;
-        }
-        .contact-box strong {
-            color: var(--accent);
-            margin-right: 10px;
-        }
-        #theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--accent);
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-        }
+/* Nav */
+nav { background: var(--navy-light); border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 200; backdrop-filter: blur(10px); }
+.nav-inner { max-width: 1200px; margin: auto; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 48px; }
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-links a { color: rgba(255,255,255,0.75); font-size: 0.82rem; font-weight: 500; padding: 10px 14px; border-radius: var(--radius-sm); transition: color var(--transition), background var(--transition); display: block; white-space: nowrap; }
+.nav-links a:hover { color: #fff; background: rgba(255,255,255,0.07); }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+#theme-toggle { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.85); padding: 7px 14px; border-radius: 99px; cursor: pointer; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; gap: 6px; transition: var(--transition); font-family: var(--font-body); }
+#theme-toggle:hover { background: rgba(255,255,255,0.15); color: #fff; }
+#hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; flex-direction: column; gap: 5px; }
+#hamburger span { display: block; width: 22px; height: 2px; background: rgba(255,255,255,0.85); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+#hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+#hamburger.open span:nth-child(2) { opacity: 0; }
+#hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+@media (max-width: 680px) {
+  .nav-inner { padding: 0 20px; }
+  #hamburger { display: flex; }
+  .nav-links { display: none; position: absolute; top: 48px; left: 0; right: 0; background: var(--navy-light); flex-direction: column; align-items: stretch; gap: 0; padding: 8px 0 12px; border-bottom: 1px solid rgba(255,255,255,0.07); z-index: 300; }
+  .nav-links.open { display: flex; }
+  .nav-links a { padding: 13px 24px; border-radius: 0; font-size: 0.9rem; }
+}
 
-        /* MOBILE FIXES */
-        @media (max-width: 600px) {
-            body { padding: 15px; }
-            .profile-card { padding: 25px; }
-            h1 { font-size: 1.8rem; }
-            .subtitle { font-size: 1rem; }
-            #theme-toggle { top: 10px; right: 10px; padding: 6px 12px; font-size: 0.8rem; }
-        }
-    </style>
+/* Profile Layout */
+.profile-wrap {
+  max-width: 1000px;
+  margin: 60px auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.profile-photo {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--accent);
+  box-shadow: var(--shadow);
+}
+.profile-photo-placeholder {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--accent);
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  color: var(--border);
+}
+.profile-info { display: flex; flex-direction: column; gap: 24px; }
+.profile-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.profile-role {
+  font-size: 1rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+.profile-tag {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  background: rgba(232,124,42,0.12);
+  color: var(--accent);
+  padding: 3px 14px;
+  border-radius: 99px;
+  font-weight: 500;
+}
+
+/* Info Sections */
+.info-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+}
+.info-block-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.info-block p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+.info-block ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.info-block ul li {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.info-block ul li::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.contact-row { display: flex; flex-direction: column; gap: 10px; }
+.contact-item { display: flex; align-items: center; gap: 12px; font-size: 0.88rem; }
+.contact-item i { color: var(--accent); width: 16px; text-align: center; }
+.contact-item a { color: var(--accent-light); }
+.contact-item a:hover { text-decoration: underline; }
+
+/* Back link */
+.back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 500; font-size: 0.9rem; margin: 0 40px 60px; transition: gap var(--transition); }
+.back-link:hover { gap: 12px; }
+
+/* Footer */
+footer { background: var(--navy); color: rgba(255,255,255,0.6); padding: 40px 40px 30px; margin-top: 20px; }
+.footer-inner { max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; gap: 30px; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 30px; margin-bottom: 24px; }
+.footer-brand h3 { font-family: var(--font-display); color: #fff; font-size: 1.1rem; margin-bottom: 6px; }
+.footer-brand p { font-size: 0.8rem; line-height: 1.9; }
+.footer-contact { font-size: 0.82rem; line-height: 2; }
+.footer-contact a { color: var(--accent-light); }
+.footer-bottom { max-width: 1200px; margin: auto; text-align: center; font-size: 0.78rem; color: rgba(255,255,255,0.35); }
+
+/* WhatsApp */
+.whatsapp-btn { position: fixed; bottom: 24px; right: 24px; background: #25d366; color: #fff; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 6px 20px rgba(0,0,0,0.2); z-index: 500; transition: transform var(--transition), background var(--transition); }
+.whatsapp-btn:hover { transform: scale(1.12); background: #1ebe5d; }
+
+@media (max-width: 750px) {
+  .profile-wrap { grid-template-columns: 1fr; padding: 0 20px; margin: 40px auto; }
+  .profile-photo, .profile-photo-placeholder { max-width: 260px; margin: 0 auto; }
+  .back-link { margin-left: 20px; }
+  header, footer { padding-left: 20px; padding-right: 20px; }
+}
+</style>
 </head>
 <body>
-    <button id="theme-toggle">🌓 Toggle Theme</button>
-    <div class="profile-card">
-        <h1>ENG. Towana Salahaddin Husein</h1>
-        <p class="subtitle">Consulting Electrical Engineer</p>
 
-        <span class="section-label">Biography</span>
-        <div class="divider"></div>
-        <p class="content-text">
-            ENG. Towana Salahaddin Husein has over 27 years of extensive experience in power system design, design review, substation engineering, technical evaluation, and site supervision. He is a leading expert in the electrical engineering landscape of the Kurdistan Region.
-        </p>
+<!-- Header -->
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="header-logo">
+      <img src="photos/logo.png" alt="Dr. Dilshad K. Jaf Engineering Consultancy Bureau logo">
+      <div class="logo-text">
+        <h1>Dr. Dilshad K. Jaf</h1>
+        <p>Engineering Consultancy Bureau</p>
+      </div>
+    </a>
+    <div class="header-location">
+      <strong>📍 Erbil – Kurdistan – Iraq</strong><br>
+      Raste.Qr – Bzhang Building
+    </div>
+  </div>
+</header>
 
-        <span class="section-label">Key Projects</span>
-        <div class="divider"></div>
-        <p class="content-text">
-            Involved in major power distribution and infrastructure projects across the region, focusing on stability, efficiency, and high-voltage engineering solutions.
-        </p>
+<!-- Nav -->
+<nav aria-label="Main navigation">
+  <div class="nav-inner">
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#team">Team</a>
+      <a href="index.html#partners">Partners</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+    <div class="nav-right">
+      <button id="theme-toggle" aria-label="Toggle light/dark mode">
+        <i class="fas fa-moon"></i> <span id="theme-label">Dark</span>
+      </button>
+      <button id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
 
-        <div class="contact-box">
-            <span class="section-label" style="margin-bottom: 15px;">Contact</span>
-            <p><strong>Email:</strong> info@engineering.com</p>
-            <p><strong>Phone:</strong> +964 751 505 0551</p>
-        </div>
+<!-- ═══════════════════════════════════════════════
+     EDIT EVERYTHING BELOW THIS LINE
+     ═══════════════════════════════════════════════ -->
+
+<div class="profile-wrap">
+
+  <!-- Photo: swap src for the member's actual photo -->
+  <img src="photos/member.jpg" alt="Member Name" class="profile-photo">
+
+  <!-- If no photo available, use this instead and remove the <img> above:
+  <div class="profile-photo-placeholder"><i class="fas fa-user"></i></div>
+  -->
+
+  <div class="profile-info">
+
+    <!-- Name & Role -->
+    <div>
+      <h1 class="profile-name">Member Full Name</h1>
+      <div class="profile-role">Job Title / Specialisation</div>
+      <!-- Remove the line below if they have no special title tag -->
+      <span class="profile-tag">Founder / Executive Manager / etc.</span>
     </div>
 
-    <script>
-        const html = document.documentElement;
-        const savedTheme = localStorage.getItem('hama-theme') || 'light';
-        html.setAttribute('data-theme', savedTheme);
+    <!-- Biography -->
+    <div class="info-block">
+      <div class="info-block-label">Biography</div>
+      <p>
+        Write a short biography about this team member here. Include their years of experience,
+        areas of expertise, academic background, and any notable achievements.
+      </p>
+    </div>
 
-        document.getElementById('theme-toggle').addEventListener('click', () => {
-            const current = html.getAttribute('data-theme');
-            const next = current === 'light' ? 'dark' : 'light';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('hama-theme', next);
-        });
-    </script>
+    <!-- Key Projects — remove this block if not needed -->
+    <div class="info-block">
+      <div class="info-block-label">Key Projects</div>
+      <ul>
+        <li>Project Name, Location — Year</li>
+        <li>Project Name, Location — Year</li>
+        <li>Project Name, Location — Year</li>
+        <li>Project Name, Location — Year</li>
+      </ul>
+    </div>
+
+    <!-- Specialisations — remove this block if not needed -->
+    <div class="info-block">
+      <div class="info-block-label">Specialisations</div>
+      <ul>
+        <li>Specialisation One</li>
+        <li>Specialisation Two</li>
+        <li>Specialisation Three</li>
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div class="info-block">
+      <div class="info-block-label">Contact</div>
+      <div class="contact-row">
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <a href="mailto:member@engineering.com">member@engineering.com</a>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone"></i>
+          <a href="tel:+9647515050551">+964 751 505 0551</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<a href="index.html" class="back-link">
+  <i class="fas fa-arrow-left"></i> Back to Home
+</a>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <h3>Dr. Dilshad K. Jaf</h3>
+      <p>Engineering Consultancy Bureau<br>Erbil – Kurdistan – Iraq</p>
+    </div>
+    <div class="footer-contact">
+      📍 Raste.Qr – Bzhang Building, Erbil<br>
+      📞 <a href="tel:+9647515050551">+964 751 505 0551</a><br>
+      📧 <a href="mailto:info@engineering.com">info@engineering.com</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2026 Dr. Dilshad K. Jaf Engineering Consultancy Bureau. All rights reserved.
+  </div>
+</footer>
+
+<a href="https://wa.me/9647515050551" class="whatsapp-btn" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<script>
+  const root = document.documentElement;
+  const toggle = document.getElementById('theme-toggle');
+  const label = document.getElementById('theme-label');
+  const icon = toggle.querySelector('i');
+  function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    try { localStorage.setItem('theme', theme); } catch(e) {}
+    icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+  }
+  let t = 'dark'; try { t = localStorage.getItem('theme') || 'dark'; } catch(e) {}
+  applyTheme(t);
+  toggle.addEventListener('click', () => applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('nav-links');
+  hamburger.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', open);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    hamburger.classList.remove('open');
+  }));
+</script>
+
 </body>
 </html>

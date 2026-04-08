@@ -1,100 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architectural Projects | Dr. Dilshad K. Jaf Engineering Consultancy Bureau</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #f4f6f9;
-            --card: #ffffff;
-            --text: #1f2937;
-            --muted: #6b7280;
-            --primary: #1f2f46;
-            --accent: #ff7300;
-        }
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); }
-        header { background: var(--primary); color: white; text-align: center; padding: 24px 20px; }
-        header h1 { margin: 0 0 10px; }
-        header p { margin: 0; opacity: 0.9; }
-        main { max-width: 1200px; margin: 0 auto; padding: 36px 20px 60px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
-        .card { background: var(--card); border-radius: 18px; overflow: hidden; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08); }
-        .card img { width: 100%; height: 220px; object-fit: cover; display: block; }
-        .content { padding: 18px; }
-        .content h3 { margin: 0 0 10px; color: var(--primary); }
-        .content p { margin: 0; line-height: 1.7; color: var(--muted); }
-        .back { text-align: center; margin-top: 32px; }
-        .back a { display: inline-block; text-decoration: none; background: var(--accent); color: white; padding: 12px 24px; border-radius: 999px; font-weight: 600; }
-        footer { background: var(--primary); color: white; text-align: center; padding: 24px 20px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Name Projects</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+body{font-family:'Poppins',sans-serif; background:#f4f6f9; margin:0; padding:0; color:#333;}
+header, footer{background:#1f2f46; color:white; padding:20px; text-align:center;}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:20px;}
+.project-card{background:rgb(255, 255, 255); padding:15px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+.project-card img{width:100%; border-radius:10px;}
+a{color:#ff7300; text-decoration:none; font-weight:600;}
+a:hover{color:#ff9800;}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Architectural Projects</h1>
-        <p>Selected architectural work by the bureau and its design team.</p>
-    </header>
 
-    <main>
-        <section class="grid">
-            <article class="card">
-                <img src="KANI ALMANI-1.jpg" alt="Kani Almani project">
-                <div class="content">
-                    <h3>KANI ALMANI</h3>
-                    <p>Two additional buildings designed to expand the original development and make full use of the available plot.</p>
-                </div>
-            </article>
+<header>
+<h1>Architectural Projects</h1>
+<p>Samples of our Architecture PROJECTS</p>
+</header>
 
-            <article class="card">
-                <img src="ATLANTIC PROJECT .jpg" alt="Atlantic project">
-                <div class="content">
-                    <h3>ATLANTIC</h3>
-                    <p>Residential buildings within the Atlantic City project, designed under the leadership of Engineer Qasim.</p>
-                </div>
-            </article>
+<div class="projects-grid">
+  <!-- Example project card -->
+  <div class="project-card">
+    <img src="KANI ALMANI-1.jpg" alt="KANI ALMANI">
+    <h3>KANI ALMANI </h3>
+    <p>These two buildings are an addition to the old project by Engineer Qasim, and there was an empty plot of land that was utilized for these two buildings.</p>
+  </div>
 
-            <article class="card">
-                <img src="PRIVATE HOUSE-1.jpg" alt="Private house project">
-                <div class="content">
-                    <h3>PRIVATE HOUSE</h3>
-                    <p>A private residential design project located in Erbil.</p>
-                </div>
-            </article>
+  <div class="project-card">
+    <img src="ATLANTIC PROJECT .jpg" alt="Project 2">
+    <h3>ATLANTIC</h3>
+    <p>These residential buildings are part of the Atlantic City project, which were designed entirely by Engineer Qasim.</p>
+  </div>
 
-            <article class="card">
-                <img src="TOURISM HOUSE 2.jpg" alt="Tourist house project">
-                <div class="content">
-                    <h3>TOURIST HOUSE</h3>
-                    <p>A tourist house concept prepared for Zearet Village.</p>
-                </div>
-            </article>
+  <div class="project-card">
+    <img src="PRIVATE HOUSE-1.jpg" alt="Project 3">
+    <h3>PRIVATE HOUSE</h3>
+    <p>It's a private house in Erbil.</p>
+  </div>
 
-            <article class="card">
-                <img src="R-Roman Future 2.jpg" alt="Roman Future project">
-                <div class="content">
-                    <h3>ROMAN FUTURE</h3>
-                    <p>An open Roman theater concept created as part of an architectural competition for the ecological park in Erbil.</p>
-                </div>
-            </article>
+  <div class="project-card">
+    <img src="TOURISM HOUSE 2.jpg" alt="Tourist House">
+    <h3>Tourist House</h3>
+    <p>It's a tourist house in Zearet Village.</p>
+  </div>
 
-            <article class="card">
-                <img src="R- Resturant 1.jpg" alt="Restaurant project">
-                <div class="content">
-                    <h3>RESTAURANT</h3>
-                    <p>An open restaurant concept developed for the same ecological park design competition.</p>
-                </div>
-            </article>
-        </section>
+  <div class="project-card">
+    <img src="R-Roman Future 2.jpg" alt="Roman Future">
+    <h3>Roman Future</h3>
+    <p>This design (the open Roman theater) is part of an architectural competition for the design of the ecological park in Erbil.</p>
+  </div>
 
-        <div class="back">
-            <a href="index.html">⬅ Back to Home</a>
-        </div>
-    </main>
+  <div class="project-card">
+    <img src="R- Resturant 1.jpg" alt="Restaurant">
+    <h3>Restaurant</h3>
+    <p>This design of a restaurant is part of an architectural competition for the design of the ecological park in Erbil.</p>
+  </div>
+  
+  <div class="project-card">
+    <img src="ADMIN.MONUMENT.jpg" alt="MONUMENT">
+    <h3>ADMIN MONUMENT</h3>
+    <p>it's a adminisration building in erbil MONUMENT zone</p>
+  </div>
+</div>
 
-    <footer>
-        <p>© 2026 Dr. Dilshad K. Jaf Engineering Consultancy Bureau</p>
-    </footer>
+
+<div style="text-align:center; padding:20px;">
+  <a href="index.html">⬅ Back to Home</a>
+</div>
+
+<footer>
+  <p>© 2026 Dr. Dilshad K. Jaf Engineering Consultancy Bureau</p>
+</footer>
+
 </body>
 </html>

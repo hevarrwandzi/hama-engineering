@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dr. Dilshad K. Jaf Engineering Consultancy Bureau</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* ================= ROOT ================= */
+:root {
+  --primary: #ff7a00;
+  --primary-dark: #e06700;
+  --bg: #f5f7fa;
+  --card: rgba(255,255,255,0.8);
+  --text: #222;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --card: rgba(30,41,59,0.7);
+  --text: #f1f5f9;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:0.3s;
+}
+
+/* ================= HEADER ================= */
+header{
+  backdrop-filter: blur(15px);
+  background: var(--card);
+  position: sticky;
+  top:0;
+  z-index:1000;
+}
+
+.header-container{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+}
+
+.logo img{height:55px;}
+
+.title h1{font-size:20px;}
+.location{font-size:12px;text-align:right;}
+
+/* ================= NAV ================= */
+nav{
+  display:flex;
+  gap:15px;
+  align-items:center;
+}
+
+nav a{
+  text-decoration:none;
+  color:var(--text);
+  font-weight:600;
+}
+
+nav a:hover{color:var(--primary);}
+
+/* Theme button */
+#theme-toggle{
+  background:var(--primary);
+  border:none;
+  color:white;
+  padding:6px 12px;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+/* ================= HERO ================= */
+.hero{
+  text-align:center;
+  padding:80px 20px;
+}
+
+.hero h2{
+  font-size:40px;
+  margin-bottom:15px;
+}
+
+.hero p{
+  opacity:0.8;
+}
+
+.btn{
+  margin-top:20px;
+  display:inline-block;
+  padding:12px 25px;
+  background:var(--primary);
+  color:white;
+  border-radius:30px;
+  text-decoration:none;
+  transition:0.3s;
+}
+
+.btn:hover{
+  background:var(--primary-dark);
+}
+
+/* ================= SERVICES ================= */
+section{
+  max-width:1200px;
+  margin:auto;
+  padding:60px 20px;
+}
+
+.services{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:var(--card);
+  backdrop-filter:blur(12px);
+  padding:25px;
+  border-radius:15px;
+  text-align:center;
+  transition:0.3s;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* ================= TEAM ================= */
+.team{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+
+.team-card{
+  border-radius:15px;
+  overflow:hidden;
+  background:var(--card);
+  transition:0.3s;
+}
+
+.team-card:hover{transform:scale(1.05);}
+
+.team-card img{
+  width:100%;
+  height:300px;
+  object-fit:cover;
+}
+
+.team-info{
+  padding:15px;
+  text-align:center;
+}
+
+/* ================= CONTACT ================= */
+.contact{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:20px;
+}
+
+iframe{
+  width:100%;
+  height:100%;
+  border-radius:15px;
+  border:none;
+}
+
+form{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+input, textarea{
+  padding:12px;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  background:var(--primary);
+  color:white;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* ================= FOOTER ================= */
+footer{
+  text-align:center;
+  padding:20px;
+  opacity:0.7;
+}
+
+/* ================= FLOAT BUTTONS ================= */
+.whatsapp{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  width:60px;height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  color:white;
+  font-size:25px;
+}
+
+#top{
+  position:fixed;
+  bottom:100px;
+  left:20px;
+  background:var(--primary);
+  color:white;
+  padding:10px;
+  border-radius:50%;
+  cursor:pointer;
+  display:none;
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:768px){
+  .contact{grid-template-columns:1fr;}
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="header-container">
+  <div class="logo"><img src="logo.png"></div>
+  <div class="title">
+    <h1>Dr. Dilshad K. Jaf</h1>
+    <p>Engineering Consultancy</p>
+  </div>
+  <div class="location">Erbil - Kurdistan - Iraq</div>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#services">Services</a>
+    <a href="#team">Team</a>
+    <a href="#contact">Contact</a>
+    <button id="theme-toggle">🌙</button>
+  </nav>
+</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h2>Engineering Excellence</h2>
+  <p>Professional consultancy across Kurdistan</p>
+  <a href="#contact" class="btn">Contact Us</a>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+<h2>Services</h2>
+
+<div class="services">
+  <div class="card">🏗 Civil Engineering</div>
+  <div class="card">🏢 Structural Engineering</div>
+  <div class="card">⚡ Electrical Engineering</div>
+  <div class="card">⚙ Mechanical Engineering</div>
+  <div class="card">📐 Architecture</div>
+  <div class="card">❄ HVAC Systems</div>
+</div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+<h2>Our Team</h2>
+
+<div class="team">
+  <div class="team-card">
+    <img src="dilshad.jpeg">
+    <div class="team-info">
+      <h3>Dr. Dilshad K. Jaf</h3>
+      <p>Executive Manager</p>
+    </div>
+  </div>
+
+  <div class="team-card">
+    <img src="younis.jpeg">
+    <div class="team-info">
+      <h3>Dr. Younis Khalid</h3>
+      <p>Founder</p>
+    </div>
+  </div>
+</div>
+
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+<h2>Contact</h2>
+
+<div class="contact">
+
+<iframe src="https://maps.google.com/maps?q=36.147937,44.012113&z=15&output=embed"></iframe>
+
+<form>
+<input placeholder="Name">
+<input placeholder="Email">
+<textarea placeholder="Message"></textarea>
+<button>Send</button>
+</form>
+
+</div>
+</section>
+
+<footer>
+© 2026 Dr. Dilshad Engineering
+</footer>
+
+<a href="https://wa.me/9647515050551" class="whatsapp">
+<i class="fab fa-whatsapp"></i>
+</a>
+
+<div id="top">↑</div>
+
+<script>
+
+/* THEME TOGGLE */
+const btn = document.getElementById("theme-toggle");
+btn.onclick = () => {
+  document.documentElement.dataset.theme =
+  document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+};
+
+/* BACK TO TOP */
+const topBtn = document.getElementById("top");
+
+window.onscroll = () => {
+  topBtn.style.display = window.scrollY > 300 ? "block" : "none";
+};
+
+topBtn.onclick = () => window.scrollTo({top:0,behavior:'smooth'});
+
+</script>
+
+</body>
+</html>

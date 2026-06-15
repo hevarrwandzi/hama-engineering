@@ -1035,14 +1035,22 @@ footer {
   /* Active nav link on scroll */
   const allSections = document.querySelectorAll('[id]');
   const allNavLinks = document.querySelectorAll('.nav-links a');
+  let isScrolling = false;
+
   window.addEventListener('scroll', () => {
-    let current = '';
-    allSections.forEach(s => {
-      if (window.scrollY >= s.offsetTop - 100) current = s.id;
-    });
-    allNavLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + current || (current === '' && a.getAttribute('href') === '#'));
-    });
+    if (!isScrolling) {
+      window.requestAnimationFrame(() => {
+        let current = '';
+        allSections.forEach(s => {
+          if (window.scrollY >= s.offsetTop - 100) current = s.id;
+        });
+        allNavLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + current || (current === '' && a.getAttribute('href') === '#'));
+        });
+        isScrolling = false;
+      });
+      isScrolling = true;
+    }
   }, { passive: true });
 </script>
 

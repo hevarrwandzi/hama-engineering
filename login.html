@@ -84,7 +84,15 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        const result = await response.json();
+
+        const text = await response.text();
+        let result = {};
+        try {
+          result = text ? JSON.parse(text) : {};
+        } catch (parseError) {
+          result = { message: 'Unable to reach the login service.' };
+        }
+
         if (!response.ok) throw new Error(result.message || 'Login failed');
         window.location.href = 'admin.html';
       } catch (error) {

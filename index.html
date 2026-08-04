@@ -683,7 +683,6 @@ footer {
       <a href="#partners">Partners</a>
       <a href="#platforms">Platforms</a>
       <a href="#contact">Contact</a>
-      <a href="login.html" target="_self" rel="noopener">Login</a>
     </div>
     <div class="nav-right">
       <button id="theme-toggle" aria-label="Toggle light/dark mode">
@@ -1047,13 +1046,12 @@ footer {
       <a href="https://maps.app.goo.gl/fYXXQyRPpK6Qu8on8" target="_blank" class="directions-btn">📍 Get Directions</a>
     </div>
 
-    <form class="contact-form" id="contactForm">
+    <form class="contact-form" action="https://formspree.io/f/meevkjwv" method="POST">
       <h3>Send a Message</h3>
       <input type="text" name="name" placeholder="Your Name" required autocomplete="name">
       <input type="email" name="email" placeholder="Your Email" required autocomplete="email">
       <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
       <button type="submit">Send Message</button>
-      <p id="formStatus" style="margin:0; font-size:0.9rem; color:var(--accent);"></p>
     </form>
   </div>
 </div>
@@ -1153,10 +1151,7 @@ footer {
     hamburger.setAttribute('aria-expanded', open);
   });
   navLinks.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', (event) => {
-      if (a.getAttribute('href') === 'login.html' || a.getAttribute('href') === '/login') {
-        return;
-      }
+    a.addEventListener('click', () => {
       navLinks.classList.remove('open');
       hamburger.classList.remove('open');
       hamburger.setAttribute('aria-expanded', false);
@@ -1175,43 +1170,6 @@ footer {
       a.classList.toggle('active', a.getAttribute('href') === '#' + current || (current === '' && a.getAttribute('href') === '#'));
     });
   }, { passive: true });
-</script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('contactForm');
-    const status = document.getElementById('formStatus');
-
-    if (!form || !status) return;
-
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      const data = new FormData(form);
-      const payload = {
-        name: data.get('name') || '',
-        email: data.get('email') || '',
-        message: data.get('message') || ''
-      };
-
-      status.textContent = 'Sending...';
-
-      try {
-        const response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Unable to send message.');
-
-        status.textContent = result.message || 'Message sent successfully.';
-        form.reset();
-      } catch (error) {
-        status.textContent = error.message || 'Unable to send message.';
-      }
-    });
-  });
 </script>
 <script type="application/ld+json">
 {

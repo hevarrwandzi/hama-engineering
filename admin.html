@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Submissions Admin</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Arial, Helvetica, sans-serif;
+      --bg: #f7f7f8;
+      --card: #ffffff;
+      --text: #1d2433;
+      --muted: #64748b;
+      --accent: #e87c2a;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+    .header {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .header h1 { margin: 0; font-size: 1.4rem; }
+    .header a, button {
+      border: none;
+      background: var(--accent);
+      color: white;
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .content { padding: 24px 28px 28px; }
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 18px;
+      background: #fcfdff;
+    }
+    .status { margin-bottom: 16px; color: var(--muted); }
+    .upload-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .upload-form input[type="file"] {
+      border: 1px dashed var(--border);
+      padding: 10px;
+      border-radius: 10px;
+      background: white;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th { background: #f8fafc; color: #334155; }
+    .empty {
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      background: #fcfdff;
+    }
+    .meta { color: var(--muted); font-size: 0.86rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <h1>Contact Submissions</h1>
+      <div>
+        <a href="/">Back to Home</a>
+        <button id="refreshBtn" type="button">Refresh</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="panel">
+        <h3 style="margin:0 0 10px;">Upload a Video</h3>
+        <form id="uploadForm" class="upload-form">
+          <input type="file" id="videoFile" name="video" accept="video/*" required />
+          <button type="submit">Upload Video</button>
+        </form>
+        <div id="uploadStatus" class="status" style="margin-top:10px;">Choose a video to upload.</div>
+      </div>
+      <div id="status" class="status">Loading submissions...</div>
+      <div id="tableWrap"></div>
+    </div>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    const tableWrap = document.getElementById('tableWrap');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const uploadForm = document.getElementById('uploadForm');
+    const uploadStatus = document.getElementById('uploadStatus');
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    async function loadSubmissions() {
+      statusEl.textContent = 'Loading submissions...';
+      try {
+        const response = await fetch('/api/submissions');
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error('Unable to load submissions.');
+
+        if (!data.submissions || data.submissions.length === 0) {
+          tableWrap.innerHTML = '<div class="empty">No submissions yet.</div>';
+          statusEl.textContent = 'No submissions received.';
+          return;
+        }
+
+        const rows = data.submissions.map((item) => `
+          <tr>
+            <td>${escapeHtml(item.name || '')}</td>
+            <td>${escapeHtml(item.email || '')}</td>
+            <td>${escapeHtml(item.message || '')}</td>
+            <td><div>${escapeHtml(item.createdAt || '')}</div><div class="meta">ID: ${escapeHtml(item.id || '')}</div></td>
+          </tr>
+        `).join('');
+
+        tableWrap.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Received</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+        statusEl.textContent = `${data.submissions.length} submission(s) loaded.`;
+      } catch (error) {
+        tableWrap.innerHTML = '';
+        statusEl.textContent = error.message || 'Unable to load submissions.';
+      }
+    }
+
+    uploadForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const fileInput = document.getElementById('videoFile');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        uploadStatus.textContent = 'Please choose a video file.';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('video', file);
+      uploadStatus.textContent = 'Uploading...';
+
+      try {
+        const response = await fetch('/api/upload-video', {
+          method: 'POST',
+          body: formData
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Upload failed.');
+        uploadStatus.textContent = result.message || 'Video uploaded successfully.';
+        fileInput.value = '';
+      } catch (error) {
+        uploadStatus.textContent = error.message || 'Upload failed.';
+      }
+    });
+
+    refreshBtn.addEventListener('click', loadSubmissions);
+    loadSubmissions();
+  </script>
+</body>
+</html>

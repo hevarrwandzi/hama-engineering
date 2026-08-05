@@ -393,7 +393,10 @@
         <div class="panel-title">
           <span>📹 Video Assets & Deletion</span>
         </div>
-        <button id="refreshVideosBtn" class="btn btn-glass">🔄 Sync S3</button>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button id="refreshVideosBtn" class="btn btn-glass">🔄 Sync S3</button>
+          <button id="removeAllVideosBtn" class="btn btn-danger" onclick="deleteAllVideos()">🗑️ Remove All Videos</button>
+        </div>
       </div>
 
       <div id="videoListContainer">
@@ -416,6 +419,9 @@
     </section>
   </div>
 
+  <!-- Toast Notification Container -->
+  <div id="toast" style="position:fixed; bottom:24px; right:24px; z-index:9999; background:rgba(13,24,43,0.95); backdrop-filter:blur(16px); border:1px solid var(--border-accent); color:var(--text); padding:14px 22px; border-radius:16px; font-weight:700; box-shadow:var(--shadow-lg); display:none; transform:translateY(20px); transition:all 0.3s ease;"></div>
+
   <script>
     // AWS Configuration (Safe String Split)
     const _k1 = 'AKIAQ' + 'C6KG7HZ' + 'VRWBO765';
@@ -429,6 +435,21 @@
 
     const s3 = new AWS.S3();
     const BUCKET_NAME = 'hama-engineering-videos';
+    let currentS3Objects = [];
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.borderColor = isError ? 'var(--danger)' : 'var(--border-accent)';
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        setTimeout(() => { toast.style.display = 'none'; }, 300);
+      }, 3000);
+    }
 
     // Elements
     const dropzone = document.getElementById('dropzone');
@@ -484,11 +505,13 @@
         if (err) {
           uploadStatusMessage.style.color = 'var(--danger)';
           uploadStatusMessage.textContent = '❌ Upload Failed: ' + err.message;
+          showToast('Upload failed: ' + err.message, true);
         } else {
           progressBarFill.style.width = '100%';
           uploadPercentText.textContent = '100%';
           uploadStatusMessage.style.color = 'var(--success)';
           uploadStatusMessage.textContent = '🎉 Video Uploaded & Live on AWS S3!';
+          showToast('🎉 Video uploaded successfully!');
           fileInput.value = '';
           setTimeout(() => { loadS3Videos(); }, 1200);
         }
@@ -506,22 +529,22 @@
           return;
         }
 
-        const objects = (data.Contents || []).filter(o => o.Size > 0);
-        document.getElementById('statVideosCount').textContent = objects.length;
+        currentS3Objects = (data.Contents || []).filter(o => o.Size > 0);
+        document.getElementById('statVideosCount').textContent = currentS3Objects.length;
 
-        let totalSizeBytes = objects.reduce((acc, o) => acc + o.Size, 0);
+        let totalSizeBytes = currentS3Objects.reduce((acc, o) => acc + o.Size, 0);
         let formattedStorage = (totalSizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
         if (totalSizeBytes > 1024 * 1024 * 1024) {
           formattedStorage = (totalSizeBytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
         }
         document.getElementById('statStorageSize').textContent = formattedStorage;
 
-        if (objects.length === 0) {
+        if (currentS3Objects.length === 0) {
           container.innerHTML = '<div class="empty-state">No videos found in S3 storage. Upload your first video above!</div>';
           return;
         }
 
-        const gridHtml = '<div class="video-grid">' + objects.map(obj => {
+        const gridHtml = '<div class="video-grid">' + currentS3Objects.map(obj => {
           const fileName = obj.Key.replace(/^videos\//, '');
           const fileSizeMB = (obj.Size / (1024 * 1024)).toFixed(1) + ' MB';
           const videoUrl = `https://${BUCKET_NAME}.s3.eu-north-1.amazonaws.com/${obj.Key}`;
@@ -546,7 +569,7 @@
                 </div>
                 <div style="display:flex; gap:10px; margin-top:6px;">
                   <a href="${videoUrl}" target="_blank" download class="btn btn-glass" style="flex:1; text-align:center;">Open ↗</a>
-                  <button class="btn btn-danger" onclick="deleteVideo('${obj.Key}')" style="flex:1;">🗑️ Delete</button>
+                  <button class="btn btn-danger" onclick="deleteVideo('${obj.Key}')" style="flex:1;">🗑️ Delete Video</button>
                 </div>
               </div>
             </div>
@@ -557,15 +580,42 @@
       });
     }
 
-    // Delete Video Function
+    // Delete Single Video Function
     window.deleteVideo = function(key) {
       const fileName = key.replace(/^videos\//, '');
-      if (!confirm(`Are you sure you want to PERMANENTLY delete "${fileName}" from AWS S3?`)) return;
+      if (!confirm(`Are you sure you want to REMOVE "${fileName}" permanently from AWS S3?`)) return;
 
       s3.deleteObject({ Bucket: BUCKET_NAME, Key: key }, (err, data) => {
         if (err) {
-          alert('Delete error: ' + err.message);
+          showToast('Failed to delete video: ' + err.message, true);
         } else {
+          showToast(`🗑️ "${fileName}" removed from AWS S3!`);
+          loadS3Videos();
+        }
+      });
+    };
+
+    // Bulk Delete All Videos Function
+    window.deleteAllVideos = function() {
+      if (!currentS3Objects || currentS3Objects.length === 0) {
+        showToast('No videos available to remove.', true);
+        return;
+      }
+
+      if (!confirm(`⚠️ ARE YOU SURE? This will PERMANENTLY REMOVE ALL ${currentS3Objects.length} VIDEOS from AWS S3!`)) {
+        return;
+      }
+
+      const objectsToDelete = currentS3Objects.map(o => ({ Key: o.Key }));
+
+      s3.deleteObjects({
+        Bucket: BUCKET_NAME,
+        Delete: { Objects: objectsToDelete }
+      }, (err, data) => {
+        if (err) {
+          showToast('Failed to remove videos: ' + err.message, true);
+        } else {
+          showToast(`🗑️ All ${objectsToDelete.length} videos removed from AWS S3!`);
           loadS3Videos();
         }
       });

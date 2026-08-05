@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enterprise Media Portal — Hama Engineering</title>
+  <title>Enterprise Media Portal — Dr. Dilshad ECB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -78,16 +78,6 @@
     }
 
     .brand { display: flex; align-items: center; gap: 14px; }
-    .brand-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-light));
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      font-size: 1.5rem;
-      box-shadow: 0 8px 22px var(--accent-glow);
-    }
     .brand-title { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
     .brand-subtitle { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
 
@@ -201,6 +191,7 @@
       font-weight: 800;
       color: var(--accent);
       border: 1px solid rgba(255,107,0,0.3);
+      z-index: 2;
     }
 
     .card-body {
@@ -240,6 +231,44 @@
       border-radius: 24px;
       background: var(--card-bg);
     }
+
+    /* Theater HD Player Modal */
+    .theater-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 5, 12, 0.95);
+      backdrop-filter: blur(20px);
+      z-index: 999999;
+      display: none;
+      flex-direction: column;
+      padding: 24px;
+    }
+    .theater-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .theater-title {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+    .theater-body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .theater-body video {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 18px;
+      box-shadow: 0 0 60px rgba(0,0,0,0.8);
+      background: #000;
+      border: 1px solid var(--border-accent);
+    }
   </style>
 </head>
 <body>
@@ -271,6 +300,19 @@
     <!-- Video Grid Container -->
     <div id="videoContainer">
       <div class="empty-state">Loading video gallery from AWS S3...</div>
+    </div>
+  </div>
+
+  <!-- Theater HD Video Modal -->
+  <div id="theaterModal" class="theater-modal">
+    <div class="theater-header">
+      <div id="theaterTitle" class="theater-title">HD Video Player</div>
+      <button class="btn btn-glass" onclick="closeTheaterModal()">❌ Close Theater</button>
+    </div>
+    <div class="theater-body">
+      <video id="theaterPlayer" controls autoplay style="width: 100%; max-width: 1100px;">
+        <source id="theaterSource" src="" type="video/mp4">
+      </video>
     </div>
   </div>
 
@@ -323,7 +365,6 @@
           for (let i = 0; i < contents.length; i++) {
             const key = contents[i].getElementsByTagName('Key')[0]?.textContent || '';
             const size = parseInt(contents[i].getElementsByTagName('Size')[0]?.textContent || '0');
-            const lowerKey = key.toLowerCase();
 
             if (size > 0 && key.startsWith('videos/')) {
               const name = key.replace(/^videos\//, '');
@@ -370,14 +411,16 @@
         const mimeType = isMov ? 'video/quicktime' : 'video/mp4';
         const extTag = isMov ? 'MOV' : 'MP4';
         const cleanTitle = formatCleanTitle(video.name);
+        const thumbUrl = `${video.url}#t=0.5`;
+        const encodedUrl = encodeURIComponent(video.url);
 
         return `
           <div class="video-card">
             <div class="player-wrap">
               <span class="hd-badge">${extTag} HD</span>
               <video controls preload="metadata">
-                <source src="${video.url}" type="${mimeType}">
-                <source src="${video.url}">
+                <source src="${thumbUrl}" type="${mimeType}">
+                <source src="${thumbUrl}">
               </video>
             </div>
             <div class="card-body">
@@ -386,7 +429,7 @@
                 <span class="size-pill">📦 ${video.size || 'HD Video'} • ${extTag}</span>
                 <div style="display:flex; gap:6px;">
                   <button class="btn btn-glass btn-sm" onclick="copyLink('${video.url}')">📋 Link</button>
-                  <a href="${video.url}" target="_blank" download class="btn btn-primary btn-sm">Play ↗</a>
+                  <button class="btn btn-primary btn-sm" onclick="openTheaterModal('${encodedUrl}', '${cleanTitle.replace(/'/g, "\\'")}', '${mimeType}')">Play ↗</button>
                 </div>
               </div>
             </div>
@@ -396,6 +439,26 @@
 
       container.innerHTML = gridHtml;
     }
+
+    // Theater Modal Controls
+    window.openTheaterModal = function(encodedUrl, title, mimeType) {
+      const url = decodeURIComponent(encodedUrl);
+      document.getElementById('theaterTitle').textContent = `🎬 ${title}`;
+      const player = document.getElementById('theaterPlayer');
+      const source = document.getElementById('theaterSource');
+
+      source.src = url;
+      source.type = mimeType;
+      player.load();
+      document.getElementById('theaterModal').style.display = 'flex';
+      player.play().catch(e => {});
+    };
+
+    window.closeTheaterModal = function() {
+      const player = document.getElementById('theaterPlayer');
+      player.pause();
+      document.getElementById('theaterModal').style.display = 'none';
+    };
 
     window.copyLink = function(url) {
       navigator.clipboard.writeText(url).then(() => {

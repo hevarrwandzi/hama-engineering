@@ -734,12 +734,14 @@
         const isMov = obj.Key.toLowerCase().endsWith('.mov');
         const mimeType = isMov ? 'video/quicktime' : 'video/mp4';
 
+        const thumbUrl = `${videoUrl}#t=0.5`;
+
         return `
           <div class="video-card">
             <div class="video-preview-wrapper">
               <video controls preload="metadata">
-                <source src="${videoUrl}" type="${mimeType}">
-                <source src="${videoUrl}">
+                <source src="${thumbUrl}" type="${mimeType}">
+                <source src="${thumbUrl}">
               </video>
             </div>
             <div class="video-info">

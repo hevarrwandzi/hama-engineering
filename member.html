@@ -417,7 +417,6 @@
         return `
           <div class="video-card">
             <div class="player-wrap">
-              <span class="hd-badge">${extTag} HD</span>
               <video controls preload="metadata">
                 <source src="${thumbUrl}" type="${mimeType}">
                 <source src="${thumbUrl}">
@@ -426,7 +425,7 @@
             <div class="card-body">
               <div class="card-title">${cleanTitle}</div>
               <div class="card-footer">
-                <span class="size-pill">📦 ${video.size || 'HD Video'} • ${extTag}</span>
+                <span class="size-pill">📦 ${video.size || 'Video'}</span>
                 <div style="display:flex; gap:6px;">
                   <button class="btn btn-glass btn-sm" onclick="copyLink('${video.url}')">📋 Link</button>
                   <button class="btn btn-primary btn-sm" onclick="openTheaterModal('${encodedUrl}', '${cleanTitle.replace(/'/g, "\\'")}', '${mimeType}')">Play ↗</button>

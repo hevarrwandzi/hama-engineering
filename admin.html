@@ -567,9 +567,10 @@
                     <span>📅 ${new Date(obj.LastModified).toLocaleDateString()}</span>
                   </div>
                 </div>
-                <div style="display:flex; gap:10px; margin-top:6px;">
+                <div style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;">
                   <a href="${videoUrl}" target="_blank" download class="btn btn-glass" style="flex:1; text-align:center;">Open ↗</a>
-                  <button class="btn btn-danger" onclick="deleteVideo('${obj.Key}')" style="flex:1;">🗑️ Delete Video</button>
+                  <button class="btn btn-glass" onclick="renameVideo('${obj.Key}')" style="flex:1; border-color:rgba(255,107,0,0.3); color:var(--accent);">✏️ Rename</button>
+                  <button class="btn btn-danger" onclick="deleteVideo('${obj.Key}')" style="flex:1;">🗑️ Delete</button>
                 </div>
               </div>
             </div>
@@ -579,6 +580,41 @@
         container.innerHTML = gridHtml;
       });
     }
+
+    // Rename Video Function
+    window.renameVideo = function(oldKey) {
+      const currentName = oldKey.replace(/^videos\//, '');
+      const newTitle = prompt('Enter new video name:', currentName);
+      
+      if (!newTitle || newTitle.trim() === '' || newTitle.trim() === currentName) {
+        return;
+      }
+
+      const cleanNewName = newTitle.trim().replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
+      const newKey = `videos/${cleanNewName}`;
+
+      showToast(`✏️ Renaming video on S3...`);
+
+      s3.copyObject({
+        Bucket: BUCKET_NAME,
+        CopySource: encodeURIComponent(`${BUCKET_NAME}/${oldKey}`),
+        Key: newKey
+      }, (copyErr, data) => {
+        if (copyErr) {
+          showToast('Rename failed: ' + copyErr.message, true);
+          return;
+        }
+
+        s3.deleteObject({ Bucket: BUCKET_NAME, Key: oldKey }, (delErr) => {
+          if (delErr) {
+            showToast('Video copied but failed to remove old version: ' + delErr.message, true);
+          } else {
+            showToast(`✏️ Video renamed to "${cleanNewName}"!`);
+            loadS3Videos();
+          }
+        });
+      });
+    };
 
     // Delete Single Video Function
     window.deleteVideo = function(key) {

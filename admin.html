@@ -219,18 +219,24 @@
       uploadStatus.textContent = 'Preparing upload...';
 
       try {
-        // Step 1: Check if S3 Presigned URL mode is enabled
-        const presignRes = await fetch('/api/get-upload-url', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fileName: file.name, fileType: file.type })
-        });
-        const presignData = await presignRes.json();
+        // Step 1: Check if server API endpoint is available
+        let presignData = null;
+        try {
+          const presignRes = await fetch('/api/get-upload-url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fileName: file.name, fileType: file.type })
+          });
+          if (presignRes.ok) {
+            presignData = await presignRes.json();
+          }
+        } catch (e) {
+          console.log('[S3 Static Direct Upload Mode]');
+        }
 
-        if (presignData.ok && presignData.s3Mode) {
+        if (presignData && presignData.ok && presignData.s3Mode) {
           // Direct S3 Upload via Presigned Post
           uploadStatus.textContent = 'Uploading directly to AWS S3... (0%)';
-          
           const s3FormData = new FormData();
           Object.entries(presignData.fields).forEach(([key, value]) => {
             s3FormData.append(key, value);
@@ -247,11 +253,8 @@
               }
             };
             xhr.onload = () => {
-              if (xhr.status >= 200 && xhr.status < 300) {
-                resolve();
-              } else {
-                reject(new Error(`S3 upload failed with status ${xhr.status}`));
-              }
+              if (xhr.status >= 200 && xhr.status < 300) resolve();
+              else reject(new Error(`S3 upload failed with status ${xhr.status}`));
             };
             xhr.onerror = () => reject(new Error('Network error during S3 upload'));
             xhr.send(s3FormData);
@@ -262,18 +265,31 @@
           return;
         }
 
-        // Step 2: Fallback to local server upload if S3 is not configured
-        uploadStatus.textContent = 'Uploading to server...';
-        const formData = new FormData();
-        formData.append('video', file);
+        // Direct Browser-to-S3 Upload for Pure S3 Static Hosting
+        uploadStatus.textContent = 'Uploading video directly to AWS S3... (0%)';
+        const cleanName = file.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
+        const s3Key = `videos/${Date.now()}-${cleanName}`;
+        const s3DirectUrl = `https://hama-engineering-videos.s3.eu-north-1.amazonaws.com/${s3Key}`;
 
-        const response = await fetch('/api/upload-video', {
-          method: 'POST',
-          body: formData
+        await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('PUT', s3DirectUrl);
+          xhr.setRequestHeader('Content-Type', file.type || 'video/mp4');
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) {
+              const percent = Math.round((e.loaded / e.total) * 100);
+              uploadStatus.textContent = `Uploading to AWS S3... (${percent}%)`;
+            }
+          };
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) resolve();
+            else reject(new Error(`S3 upload returned status ${xhr.status}`));
+          };
+          xhr.onerror = () => reject(new Error('Network error during S3 upload'));
+          xhr.send(file);
         });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Upload failed.');
-        uploadStatus.textContent = result.message || 'Video uploaded successfully to server.';
+
+        uploadStatus.textContent = '🎉 Video uploaded successfully to AWS S3!';
         fileInput.value = '';
       } catch (error) {
         uploadStatus.textContent = error.message || 'Upload failed.';

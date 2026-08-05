@@ -694,6 +694,13 @@
       });
     }
 
+    function formatCleanTitle(rawName) {
+      if (!rawName) return 'Untitled Video';
+      let clean = rawName.replace(/^videos\//, '').replace(/\.[a-zA-Z0-9]+$/i, '');
+      clean = clean.replace(/[-_]+/g, ' ');
+      return clean.split(' ').map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : '').join(' ');
+    }
+
     function renderFilteredVideos() {
       const container = document.getElementById('videoListContainer');
       const searchQuery = document.getElementById('adminSearchInput').value.toLowerCase().trim();
@@ -720,7 +727,8 @@
       }
 
       const gridHtml = '<div class="video-grid">' + filtered.map(obj => {
-        const fileName = obj.Key.replace(/^videos\//, '');
+        const rawFileName = obj.Key.replace(/^videos\//, '');
+        const cleanTitle = formatCleanTitle(rawFileName);
         const fileSizeMB = (obj.Size / (1024 * 1024)).toFixed(1) + ' MB';
         const videoUrl = `https://${BUCKET_NAME}.s3.eu-north-1.amazonaws.com/${obj.Key}`;
         const isMov = obj.Key.toLowerCase().endsWith('.mov');
@@ -736,7 +744,7 @@
             </div>
             <div class="video-info">
               <div>
-                <div class="video-title">${fileName}</div>
+                <div class="video-title">${cleanTitle} <span style="font-size:0.75rem; color:var(--text-muted); font-weight:500;">(${rawFileName})</span></div>
                 <div class="video-meta" style="margin-top:8px;">
                   <span>📦 ${fileSizeMB}</span>
                   <span>📅 ${new Date(obj.LastModified).toLocaleDateString()}</span>

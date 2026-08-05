@@ -350,6 +350,13 @@
       container.innerHTML = '<div class="empty-state">No videos uploaded yet. The Admin can upload videos from the Admin Command Console.</div>';
     }
 
+    function formatCleanTitle(rawName) {
+      if (!rawName) return 'Untitled Video';
+      let clean = rawName.replace(/^videos\//, '').replace(/\.[a-zA-Z0-9]+$/i, '');
+      clean = clean.replace(/[-_]+/g, ' ');
+      return clean.split(' ').map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : '').join(' ');
+    }
+
     function renderVideos(videos) {
       const container = document.getElementById('videoContainer');
 
@@ -361,20 +368,22 @@
       const gridHtml = '<div class="grid">' + videos.map(video => {
         const isMov = video.url.toLowerCase().endsWith('.mov');
         const mimeType = isMov ? 'video/quicktime' : 'video/mp4';
+        const extTag = isMov ? 'MOV' : 'MP4';
+        const cleanTitle = formatCleanTitle(video.name);
 
         return `
           <div class="video-card">
             <div class="player-wrap">
-              <span class="hd-badge">4K / HD</span>
+              <span class="hd-badge">${extTag} HD</span>
               <video controls preload="metadata">
                 <source src="${video.url}" type="${mimeType}">
                 <source src="${video.url}">
               </video>
             </div>
             <div class="card-body">
-              <div class="card-title">${video.name}</div>
+              <div class="card-title">${cleanTitle}</div>
               <div class="card-footer">
-                <span class="size-pill">📦 ${video.size || 'HD Video'}</span>
+                <span class="size-pill">📦 ${video.size || 'HD Video'} • ${extTag}</span>
                 <div style="display:flex; gap:6px;">
                   <button class="btn btn-glass btn-sm" onclick="copyLink('${video.url}')">📋 Link</button>
                   <a href="${video.url}" target="_blank" download class="btn btn-primary btn-sm">Play ↗</a>

@@ -325,13 +325,15 @@
             const size = parseInt(contents[i].getElementsByTagName('Size')[0]?.textContent || '0');
             const lowerKey = key.toLowerCase();
 
-            if (size > 0 && (lowerKey.endsWith('.mp4') || lowerKey.endsWith('.webm') || lowerKey.endsWith('.mov') || lowerKey.endsWith('.m4v') || lowerKey.endsWith('.avi'))) {
+            if (size > 0 && key.startsWith('videos/')) {
               const name = key.replace(/^videos\//, '');
-              let sizeStr = (size / (1024 * 1024)).toFixed(1) + ' MB';
-              if (size > 1024 * 1024 * 1024) {
-                sizeStr = (size / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+              if (name.trim().length > 0) {
+                let sizeStr = (size / (1024 * 1024)).toFixed(1) + ' MB';
+                if (size > 1024 * 1024 * 1024) {
+                  sizeStr = (size / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+                }
+                s3Videos.push({ name, url: `${s3BucketUrl}/${key}`, size: sizeStr });
               }
-              s3Videos.push({ name, url: `${s3BucketUrl}/${key}`, size: sizeStr });
             }
           }
 

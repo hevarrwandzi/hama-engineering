@@ -785,7 +785,14 @@
         return;
       }
 
-      const cleanNewName = newTitle.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
+      let cleanNewName = newTitle.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
+
+      // Preserve extension if omitted
+      const oldExtMatch = currentName.match(/\.([a-zA-Z0-9]+)$/);
+      if (oldExtMatch && !cleanNewName.includes('.')) {
+        cleanNewName += '.' + oldExtMatch[1];
+      }
+
       const newKey = `videos/${cleanNewName}`;
 
       closeRenameModal();

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Member Cinema Gallery — Hama Engineering</title>
+  <title>Enterprise Media Portal — Hama Engineering</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -13,11 +13,11 @@
       --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
       color-scheme: dark;
       
-      --bg: #050811;
-      --card-bg: rgba(13, 22, 40, 0.75);
-      --surface: #0b1426;
+      --bg: #040711;
+      --card-bg: rgba(11, 18, 32, 0.8);
+      --surface: #0a1120;
       --text: #f0f4fc;
-      --text-muted: #889bb8;
+      --text-muted: #8496b0;
       
       --accent: #ff6b00;
       --accent-glow: rgba(255, 107, 0, 0.35);
@@ -25,7 +25,7 @@
       
       --border: rgba(255, 255, 255, 0.08);
       --border-accent: rgba(255, 107, 0, 0.35);
-      --shadow-lg: 0 24px 60px -12px rgba(0, 0, 0, 0.65);
+      --shadow-lg: 0 24px 60px -12px rgba(0, 0, 0, 0.7);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,7 +42,7 @@
     /* Ambient Background Glows */
     body::before {
       content: '';
-      position: absolute;
+      position: fixed;
       top: -150px;
       left: 50%;
       transform: translateX(-50%);
@@ -54,7 +54,7 @@
     }
 
     .wrap {
-      max-width: 1280px;
+      max-width: 1340px;
       margin: 0 auto;
       padding: 32px 24px 60px;
       position: relative;
@@ -79,16 +79,16 @@
 
     .brand { display: flex; align-items: center; gap: 14px; }
     .brand-icon {
-      width: 46px;
-      height: 46px;
+      width: 48px;
+      height: 48px;
       background: linear-gradient(135deg, var(--accent), var(--accent-light));
       border-radius: 14px;
       display: grid;
       place-items: center;
-      font-size: 1.4rem;
-      box-shadow: 0 8px 20px var(--accent-glow);
+      font-size: 1.5rem;
+      box-shadow: 0 8px 22px var(--accent-glow);
     }
-    .brand-title { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; }
+    .brand-title { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
     .brand-subtitle { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
 
     .nav-actions { display: flex; align-items: center; gap: 12px; }
@@ -105,7 +105,8 @@
       text-decoration: none;
       transition: all 0.25s ease;
     }
-    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: #050811; box-shadow: 0 6px 20px var(--accent-glow); }
+    .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: #040711; box-shadow: 0 6px 20px var(--accent-glow); }
     .btn-glass { background: rgba(255,255,255,0.06); color: var(--text); border: 1px solid var(--border); }
     .btn:hover { transform: translateY(-2px); filter: brightness(1.06); }
 
@@ -117,6 +118,11 @@
       gap: 16px;
       margin-bottom: 32px;
       flex-wrap: wrap;
+      background: var(--card-bg);
+      padding: 16px 24px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(16px);
     }
     .search-box {
       flex: 1;
@@ -125,11 +131,10 @@
     }
     .search-box input {
       width: 100%;
-      padding: 14px 20px 14px 46px;
+      padding: 12px 20px 12px 46px;
       border-radius: 99px;
       border: 1px solid var(--border);
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
+      background: var(--surface);
       color: var(--text);
       font-size: 0.95rem;
       outline: none;
@@ -151,7 +156,7 @@
     /* Video Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
       gap: 28px;
     }
 
@@ -169,7 +174,7 @@
     .video-card:hover {
       border-color: var(--border-accent);
       transform: translateY(-6px);
-      box-shadow: 0 24px 48px -12px rgba(255, 107, 0, 0.2);
+      box-shadow: 0 24px 48px -12px rgba(255, 107, 0, 0.25);
     }
 
     .player-wrap {
@@ -188,7 +193,7 @@
       position: absolute;
       top: 12px;
       right: 12px;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.75);
       backdrop-filter: blur(8px);
       padding: 4px 10px;
       border-radius: 8px;
@@ -218,7 +223,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .size-pill {
       font-size: 0.82rem;
@@ -244,8 +250,8 @@
       <div class="brand">
         <div class="brand-icon">🎬</div>
         <div>
-          <div class="brand-title">Member Cinema Gallery</div>
-          <div class="brand-subtitle">Hama Engineering Internal Media</div>
+          <div class="brand-title">Enterprise Media Portal</div>
+          <div class="brand-subtitle">Hama Engineering Internal Video Infrastructure</div>
         </div>
       </div>
       <div class="nav-actions">
@@ -268,8 +274,24 @@
     </div>
   </div>
 
+  <!-- Toast Notification -->
+  <div id="toast" style="position:fixed; bottom:24px; right:24px; z-index:99999; background:rgba(10,17,32,0.95); backdrop-filter:blur(16px); border:1px solid var(--border-accent); color:var(--text); padding:14px 22px; border-radius:16px; font-weight:700; box-shadow:var(--shadow-lg); display:none; transform:translateY(20px); transition:all 0.3s ease;"></div>
+
   <script>
     let allVideos = [];
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        setTimeout(() => { toast.style.display = 'none'; }, 300);
+      }, 3000);
+    }
 
     async function loadVideos() {
       const container = document.getElementById('videoContainer');
@@ -351,7 +373,10 @@
               <div class="card-title">${video.name}</div>
               <div class="card-footer">
                 <span class="size-pill">📦 ${video.size || 'HD Video'}</span>
-                <a href="${video.url}" target="_blank" download class="btn btn-primary" style="padding:6px 14px; font-size:0.8rem;">Play / Open Video ↗</a>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn btn-glass btn-sm" onclick="copyLink('${video.url}')">📋 Link</button>
+                  <a href="${video.url}" target="_blank" download class="btn btn-primary btn-sm">Play ↗</a>
+                </div>
               </div>
             </div>
           </div>
@@ -360,6 +385,12 @@
 
       container.innerHTML = gridHtml;
     }
+
+    window.copyLink = function(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('📋 S3 Video link copied to clipboard!');
+      });
+    };
 
     // Search input listener
     document.getElementById('searchInput').addEventListener('input', (e) => {

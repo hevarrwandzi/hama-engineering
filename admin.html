@@ -3,23 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Command Studio — Hama Engineering</title>
+  <title>Enterprise Command Console — Hama Engineering</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1350.0.min.js"></script>
   <style>
     :root {
       --font-heading: 'Outfit', -apple-system, sans-serif;
       --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
       color-scheme: dark;
       
-      --bg: #060913;
-      --card-bg: rgba(13, 20, 36, 0.7);
-      --card-hover: rgba(18, 28, 50, 0.85);
-      --surface: #0b1324;
+      --bg: #040711;
+      --card-bg: rgba(11, 18, 32, 0.8);
+      --card-hover: rgba(16, 26, 46, 0.9);
+      --surface: #0a1120;
+      --surface-elevated: #0f1a30;
       --text: #f0f4fc;
-      --text-muted: #889bb8;
+      --text-muted: #8496b0;
       
       --accent: #ff6b00;
       --accent-glow: rgba(255, 107, 0, 0.35);
@@ -31,8 +33,8 @@
       --danger-hover: #e11d48;
       
       --border: rgba(255, 255, 255, 0.08);
-      --border-accent: rgba(255, 107, 0, 0.3);
-      --shadow-lg: 0 24px 60px -12px rgba(0, 0, 0, 0.6);
+      --border-accent: rgba(255, 107, 0, 0.35);
+      --shadow-lg: 0 24px 60px -12px rgba(0, 0, 0, 0.7);
       --radius: 20px;
     }
 
@@ -50,36 +52,54 @@
     /* Ambient Background Glows */
     body::before {
       content: '';
-      position: absolute;
-      top: -200px;
-      right: -100px;
-      width: 600px;
-      height: 600px;
+      position: fixed;
+      top: -250px;
+      right: -150px;
+      width: 700px;
+      height: 700px;
       background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
     body::after {
       content: '';
-      position: absolute;
-      bottom: -200px;
-      left: -100px;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+      position: fixed;
+      bottom: -250px;
+      left: -150px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
 
     .wrap {
-      max-width: 1280px;
+      max-width: 1340px;
       margin: 0 auto;
-      padding: 32px 24px 60px;
+      padding: 24px 24px 60px;
       position: relative;
       z-index: 1;
     }
 
-    /* Header Nav */
+    /* System Status Bar */
+    .sys-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 18px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      backdrop-filter: blur(12px);
+    }
+    .sys-left { display: flex; align-items: center; gap: 16px; }
+    .sys-tag { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+    .sys-dot { width: 8px; height: 8px; border-radius: 99px; background: var(--success); box-shadow: 0 0 10px var(--success); }
+
+    /* Top Nav */
     .top-nav {
       display: flex;
       justify-content: space-between;
@@ -94,19 +114,19 @@
       margin-bottom: 32px;
       box-shadow: var(--shadow-lg);
     }
-    
+
     .brand { display: flex; align-items: center; gap: 14px; }
     .brand-icon {
-      width: 46px;
-      height: 46px;
+      width: 48px;
+      height: 48px;
       background: linear-gradient(135deg, var(--accent), var(--accent-light));
       border-radius: 14px;
       display: grid;
       place-items: center;
-      font-size: 1.4rem;
-      box-shadow: 0 8px 20px var(--accent-glow);
+      font-size: 1.5rem;
+      box-shadow: 0 8px 22px var(--accent-glow);
     }
-    .brand-title { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; }
+    .brand-title { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
     .brand-subtitle { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
 
     .nav-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -124,9 +144,10 @@
       text-decoration: none;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
     .btn-primary {
       background: linear-gradient(135deg, var(--accent), var(--accent-light));
-      color: #060913;
+      color: #040711;
       box-shadow: 0 6px 20px var(--accent-glow);
     }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px var(--accent-glow); }
@@ -145,7 +166,7 @@
     }
     .btn-danger:hover { background: var(--danger); color: #fff; transform: translateY(-2px); }
 
-    /* Hero / Status Banner */
+    /* Metric Cards */
     .hero-banner {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -206,16 +227,16 @@
     /* Drag & Drop Upload Zone */
     .upload-zone {
       border: 2px dashed rgba(255, 107, 0, 0.4);
-      background: radial-gradient(circle at center, rgba(255,107,0,0.06) 0%, rgba(13,20,36,0.3) 100%);
+      background: radial-gradient(circle at center, rgba(255,107,0,0.06) 0%, rgba(11,18,32,0.3) 100%);
       border-radius: 22px;
-      padding: 48px 32px;
+      padding: 44px 32px;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .upload-zone:hover, .upload-zone.dragover {
       border-color: var(--accent);
-      background: radial-gradient(circle at center, rgba(255,107,0,0.12) 0%, rgba(13,20,36,0.5) 100%);
+      background: radial-gradient(circle at center, rgba(255,107,0,0.12) 0%, rgba(11,18,32,0.5) 100%);
       transform: scale(1.005);
     }
     .upload-zone input { display: none; }
@@ -260,27 +281,72 @@
       justify-content: space-between;
     }
 
+    /* Pro Search & Filter Tools */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.02);
+      padding: 14px 20px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+    }
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 10px 16px 10px 42px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .search-box input:focus { border-color: var(--accent); }
+    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: var(--text-muted); }
+
+    .filter-group { display: flex; gap: 10px; align-items: center; }
+    select.select-custom {
+      padding: 10px 16px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
     /* Video Cards Grid */
     .video-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
       gap: 24px;
     }
     .video-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 20px;
+      border-radius: 22px;
       overflow: hidden;
       transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
     }
     .video-card:hover {
-      border-color: rgba(255, 107, 0, 0.3);
+      border-color: rgba(255, 107, 0, 0.35);
       transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+      box-shadow: 0 18px 44px rgba(0,0,0,0.5);
     }
-    .video-preview-wrapper { position: relative; width: 100%; height: 190px; background: #000; }
+    .video-preview-wrapper { position: relative; width: 100%; height: 195px; background: #000; }
     .video-preview-wrapper video { width: 100%; height: 100%; object-fit: cover; }
     .video-info { padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
     .video-title { font-family: var(--font-heading); font-weight: 700; font-size: 1rem; line-height: 1.4; word-break: break-all; }
@@ -300,23 +366,69 @@
       border: 1px dashed var(--border);
       border-radius: 20px;
     }
+
+    /* Rename Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 7, 17, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 99999;
+      display: none;
+      place-items: center;
+      padding: 20px;
+    }
+    .modal-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-accent);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 480px;
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal-title { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+    .modal-desc { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; }
+    .modal-input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      margin-bottom: 24px;
+    }
+    .modal-input:focus { border-color: var(--accent); }
+    .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
   </style>
 </head>
 <body>
 
   <div class="wrap">
+    <!-- Top System Live Info Bar -->
+    <div class="sys-bar">
+      <div class="sys-left">
+        <span class="sys-tag"><span class="sys-dot"></span> AWS Cloud Connected</span>
+        <span>• Region: <strong>eu-north-1</strong></span>
+        <span>• S3 Bucket: <strong>hama-engineering-videos</strong></span>
+      </div>
+      <div id="liveClock" style="font-family: var(--font-code); font-weight: 600;"></div>
+    </div>
+
     <!-- Navigation Bar -->
     <nav class="top-nav">
       <div class="brand">
         <div class="brand-icon">⚡</div>
         <div>
-          <div class="brand-title">Studio Console</div>
-          <div class="brand-subtitle">Hama Engineering Super Admin</div>
+          <div class="brand-title">Enterprise Control Studio</div>
+          <div class="brand-subtitle">Hama Engineering AWS Video Infrastructure</div>
         </div>
       </div>
       <div class="nav-actions">
-        <a href="/" class="btn btn-glass">🌐 Public Website</a>
-        <a href="member.html" class="btn btn-glass">🎬 Member Gallery</a>
+        <a href="/" class="btn btn-glass">🌐 Main Website</a>
+        <a href="member.html" class="btn btn-glass">🎬 Member Cinema</a>
         <button class="btn btn-danger" onclick="localStorage.clear(); window.location.href='login.html'">🔒 Sign Out</button>
       </div>
     </nav>
@@ -338,7 +450,7 @@
           <span class="metric-icon">💾</span>
         </div>
         <div class="metric-value" id="statStorageSize">0 MB</div>
-        <div class="metric-pill">Bucket: hama-engineering-videos</div>
+        <div class="metric-pill">hama-engineering-videos</div>
       </div>
 
       <div class="metric-card">
@@ -347,16 +459,16 @@
           <span class="metric-icon">✉️</span>
         </div>
         <div class="metric-value" id="statSubmissions">0</div>
-        <div class="metric-pill">Form Submissions</div>
+        <div class="metric-pill">Form Requests</div>
       </div>
 
       <div class="metric-card">
         <div class="metric-header">
-          <span class="metric-label">AWS Region</span>
-          <span class="metric-icon">🌐</span>
+          <span class="metric-label">Streaming Delivery</span>
+          <span class="metric-icon">🚀</span>
         </div>
-        <div class="metric-value" style="font-size:1.6rem; color:var(--accent);">eu-north-1</div>
-        <div class="metric-pill">CloudFront CDN Ready</div>
+        <div class="metric-value" style="font-size:1.6rem; color:var(--accent);">High Speed</div>
+        <div class="metric-pill">Direct S3 / CDN</div>
       </div>
     </div>
 
@@ -364,15 +476,15 @@
     <section class="section-panel">
       <div class="panel-header">
         <div class="panel-title">
-          <span>📤 Direct S3 Video Upload</span>
+          <span>📤 Direct S3 Cloud Upload</span>
         </div>
-        <span class="btn btn-glass" style="cursor:default; font-size:0.8rem;">🚀 Fast Upload</span>
+        <span class="btn btn-glass" style="cursor:default; font-size:0.8rem;">⚡ High-Bitrate Pipeline</span>
       </div>
 
       <div id="dropzone" class="upload-zone">
-        <div class="upload-badge">✦ Direct S3 Cloud Pipeline</div>
-        <div class="upload-title">Drop Video Files Here or Click to Browse</div>
-        <div class="upload-desc">Supports MP4, MOV, WEBM, M4V, AVI (High-bitrate files supported)</div>
+        <div class="upload-badge">✦ Multi-Part S3 Upload Engine</div>
+        <div class="upload-title">Drop Video Files Here or Click to Upload</div>
+        <div class="upload-desc">Supports MP4, MOV (iPhone QuickTime), WEBM, M4V, AVI</div>
         <input type="file" id="videoFileInput" accept="video/*" />
       </div>
 
@@ -391,7 +503,7 @@
     <section class="section-panel">
       <div class="panel-header">
         <div class="panel-title">
-          <span>📹 Video Assets & Deletion</span>
+          <span>📹 Video Asset Management</span>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <button id="refreshVideosBtn" class="btn btn-glass">🔄 Sync S3</button>
@@ -399,8 +511,25 @@
         </div>
       </div>
 
+      <!-- Pro Search & Filter Bar -->
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="adminSearchInput" placeholder="Filter videos by title..." />
+        </div>
+        <div class="filter-group">
+          <select id="sortSelect" class="select-custom">
+            <option value="newest">Newest Uploads First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="size-desc">Size (High to Low)</option>
+            <option value="size-asc">Size (Low to High)</option>
+            <option value="name">Name (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
       <div id="videoListContainer">
-        <div class="empty-state">Fetching video library from AWS S3...</div>
+        <div class="empty-state">Fetching video assets from AWS S3...</div>
       </div>
     </section>
 
@@ -408,7 +537,7 @@
     <section class="section-panel">
       <div class="panel-header">
         <div class="panel-title">
-          <span>✉️ Contact Form Messages</span>
+          <span>✉️ Client Contact Inquiries</span>
         </div>
         <button id="refreshSubmissionsBtn" class="btn btn-glass">🔄 Refresh Inquiries</button>
       </div>
@@ -419,11 +548,32 @@
     </section>
   </div>
 
+  <!-- Rename Modal Dialog -->
+  <div id="renameModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-title">✏️ Rename S3 Video</div>
+      <div class="modal-desc">Enter a clean filename for your video in AWS S3 storage:</div>
+      <input type="text" id="renameInput" class="modal-input" placeholder="e.g. Project-Site-Overview.mp4" />
+      <div class="modal-actions">
+        <button class="btn btn-glass" onclick="closeRenameModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitRename()">Save New Name</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
-  <div id="toast" style="position:fixed; bottom:24px; right:24px; z-index:9999; background:rgba(13,24,43,0.95); backdrop-filter:blur(16px); border:1px solid var(--border-accent); color:var(--text); padding:14px 22px; border-radius:16px; font-weight:700; box-shadow:var(--shadow-lg); display:none; transform:translateY(20px); transition:all 0.3s ease;"></div>
+  <div id="toast" style="position:fixed; bottom:24px; right:24px; z-index:99999; background:rgba(10,17,32,0.95); backdrop-filter:blur(16px); border:1px solid var(--border-accent); color:var(--text); padding:14px 22px; border-radius:16px; font-weight:700; box-shadow:var(--shadow-lg); display:none; transform:translateY(20px); transition:all 0.3s ease;"></div>
 
   <script>
-    // AWS Configuration (Safe String Split)
+    // Live System Clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('liveClock').textContent = now.toUTCString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // AWS Configuration
     const _k1 = 'AKIAQ' + 'C6KG7HZ' + 'VRWBO765';
     const _k2 = 'Fsj9bo+OtOXq037/' + '3GlhWfbMdKz' + 'FroO1VDjhmEvy';
 
@@ -436,6 +586,7 @@
     const s3 = new AWS.S3();
     const BUCKET_NAME = 'hama-engineering-videos';
     let currentS3Objects = [];
+    let activeRenameKey = null;
 
     function showToast(msg, isError = false) {
       const toast = document.getElementById('toast');
@@ -448,7 +599,7 @@
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(20px)';
         setTimeout(() => { toast.style.display = 'none'; }, 300);
-      }, 3000);
+      }, 3200);
     }
 
     // Elements
@@ -459,7 +610,7 @@
     const uploadStatusMessage = document.getElementById('uploadStatusMessage');
     const uploadPercentText = document.getElementById('uploadPercentText');
 
-    // Drag & Drop Listeners
+    // Drag & Drop
     dropzone.addEventListener('click', () => fileInput.click());
     dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
     dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
@@ -518,7 +669,7 @@
       });
     }
 
-    // Load Videos from S3
+    // Load & Render Videos from S3
     function loadS3Videos() {
       const container = document.getElementById('videoListContainer');
       container.innerHTML = '<div class="empty-state">Fetching video assets from AWS S3...</div>';
@@ -539,75 +690,120 @@
         }
         document.getElementById('statStorageSize').textContent = formattedStorage;
 
-        if (currentS3Objects.length === 0) {
-          container.innerHTML = '<div class="empty-state">No videos found in S3 storage. Upload your first video above!</div>';
-          return;
-        }
-
-        const gridHtml = '<div class="video-grid">' + currentS3Objects.map(obj => {
-          const fileName = obj.Key.replace(/^videos\//, '');
-          const fileSizeMB = (obj.Size / (1024 * 1024)).toFixed(1) + ' MB';
-          const videoUrl = `https://${BUCKET_NAME}.s3.eu-north-1.amazonaws.com/${obj.Key}`;
-          const isMov = obj.Key.toLowerCase().endsWith('.mov');
-          const mimeType = isMov ? 'video/quicktime' : 'video/mp4';
-
-          return `
-            <div class="video-card">
-              <div class="video-preview-wrapper">
-                <video controls preload="metadata">
-                  <source src="${videoUrl}" type="${mimeType}">
-                  <source src="${videoUrl}">
-                </video>
-              </div>
-              <div class="video-info">
-                <div>
-                  <div class="video-title">${fileName}</div>
-                  <div class="video-meta" style="margin-top:8px;">
-                    <span>📦 ${fileSizeMB}</span>
-                    <span>📅 ${new Date(obj.LastModified).toLocaleDateString()}</span>
-                  </div>
-                </div>
-                <div style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;">
-                  <a href="${videoUrl}" target="_blank" download class="btn btn-glass" style="flex:1; text-align:center;">Open ↗</a>
-                  <button class="btn btn-glass" onclick="renameVideo('${obj.Key}')" style="flex:1; border-color:rgba(255,107,0,0.3); color:var(--accent);">✏️ Rename</button>
-                  <button class="btn btn-danger" onclick="deleteVideo('${obj.Key}')" style="flex:1;">🗑️ Delete</button>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('') + '</div>';
-
-        container.innerHTML = gridHtml;
+        renderFilteredVideos();
       });
     }
 
-    // Rename Video Function
-    window.renameVideo = function(oldKey) {
-      const currentName = oldKey.replace(/^videos\//, '');
-      const newTitle = prompt('Enter new video name:', currentName);
-      
-      if (!newTitle || newTitle.trim() === '' || newTitle.trim() === currentName) {
+    function renderFilteredVideos() {
+      const container = document.getElementById('videoListContainer');
+      const searchQuery = document.getElementById('adminSearchInput').value.toLowerCase().trim();
+      const sortValue = document.getElementById('sortSelect').value;
+
+      let filtered = currentS3Objects.filter(o => {
+        const name = o.Key.replace(/^videos\//, '').toLowerCase();
+        return name.includes(searchQuery);
+      });
+
+      // Sorting
+      filtered.sort((a, b) => {
+        if (sortValue === 'newest') return new Date(b.LastModified) - new Date(a.LastModified);
+        if (sortValue === 'oldest') return new Date(a.LastModified) - new Date(b.LastModified);
+        if (sortValue === 'size-desc') return b.Size - a.Size;
+        if (sortValue === 'size-asc') return a.Size - b.Size;
+        if (sortValue === 'name') return a.Key.localeCompare(b.Key);
+        return 0;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty-state">No matching video assets found.</div>';
         return;
       }
 
-      const cleanNewName = newTitle.trim().replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
+      const gridHtml = '<div class="video-grid">' + filtered.map(obj => {
+        const fileName = obj.Key.replace(/^videos\//, '');
+        const fileSizeMB = (obj.Size / (1024 * 1024)).toFixed(1) + ' MB';
+        const videoUrl = `https://${BUCKET_NAME}.s3.eu-north-1.amazonaws.com/${obj.Key}`;
+        const isMov = obj.Key.toLowerCase().endsWith('.mov');
+        const mimeType = isMov ? 'video/quicktime' : 'video/mp4';
+
+        return `
+          <div class="video-card">
+            <div class="video-preview-wrapper">
+              <video controls preload="metadata">
+                <source src="${videoUrl}" type="${mimeType}">
+                <source src="${videoUrl}">
+              </video>
+            </div>
+            <div class="video-info">
+              <div>
+                <div class="video-title">${fileName}</div>
+                <div class="video-meta" style="margin-top:8px;">
+                  <span>📦 ${fileSizeMB}</span>
+                  <span>📅 ${new Date(obj.LastModified).toLocaleDateString()}</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;">
+                <button class="btn btn-glass btn-sm" onclick="copyLink('${videoUrl}')" style="flex:1;">📋 Copy Link</button>
+                <button class="btn btn-glass btn-sm" onclick="openRenameModal('${obj.Key}')" style="flex:1; border-color:rgba(255,107,0,0.3); color:var(--accent);">✏️ Rename</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteVideo('${obj.Key}')" style="flex:1;">🗑️ Delete</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('') + '</div>';
+
+      container.innerHTML = gridHtml;
+    }
+
+    // Copy Link Helper
+    window.copyLink = function(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('📋 Direct S3 link copied to clipboard!');
+      });
+    };
+
+    // Modal Rename Handlers
+    window.openRenameModal = function(key) {
+      activeRenameKey = key;
+      const currentName = key.replace(/^videos\//, '');
+      document.getElementById('renameInput').value = currentName;
+      document.getElementById('renameModal').style.display = 'grid';
+    };
+
+    window.closeRenameModal = function() {
+      document.getElementById('renameModal').style.display = 'none';
+      activeRenameKey = null;
+    };
+
+    window.submitRename = function() {
+      if (!activeRenameKey) return;
+      const newTitle = document.getElementById('renameInput').value.trim();
+      const currentName = activeRenameKey.replace(/^videos\//, '');
+
+      if (!newTitle || newTitle === currentName) {
+        closeRenameModal();
+        return;
+      }
+
+      const cleanNewName = newTitle.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
       const newKey = `videos/${cleanNewName}`;
 
-      showToast(`✏️ Renaming video on S3...`);
+      closeRenameModal();
+      showToast(`✏️ Renaming video on AWS S3...`);
 
       s3.copyObject({
         Bucket: BUCKET_NAME,
-        CopySource: encodeURIComponent(`${BUCKET_NAME}/${oldKey}`),
+        CopySource: encodeURIComponent(`${BUCKET_NAME}/${activeRenameKey}`),
         Key: newKey
-      }, (copyErr, data) => {
+      }, (copyErr) => {
         if (copyErr) {
           showToast('Rename failed: ' + copyErr.message, true);
           return;
         }
 
-        s3.deleteObject({ Bucket: BUCKET_NAME, Key: oldKey }, (delErr) => {
+        s3.deleteObject({ Bucket: BUCKET_NAME, Key: activeRenameKey }, (delErr) => {
           if (delErr) {
-            showToast('Video copied but failed to remove old version: ' + delErr.message, true);
+            showToast('Renamed but old file cleanup failed: ' + delErr.message, true);
           } else {
             showToast(`✏️ Video renamed to "${cleanNewName}"!`);
             loadS3Videos();
@@ -616,12 +812,12 @@
       });
     };
 
-    // Delete Single Video Function
+    // Single Delete
     window.deleteVideo = function(key) {
       const fileName = key.replace(/^videos\//, '');
-      if (!confirm(`Are you sure you want to REMOVE "${fileName}" permanently from AWS S3?`)) return;
+      if (!confirm(`Are you sure you want to PERMANENTLY REMOVE "${fileName}" from AWS S3?`)) return;
 
-      s3.deleteObject({ Bucket: BUCKET_NAME, Key: key }, (err, data) => {
+      s3.deleteObject({ Bucket: BUCKET_NAME, Key: key }, (err) => {
         if (err) {
           showToast('Failed to delete video: ' + err.message, true);
         } else {
@@ -631,27 +827,25 @@
       });
     };
 
-    // Bulk Delete All Videos Function
+    // Bulk Delete All
     window.deleteAllVideos = function() {
       if (!currentS3Objects || currentS3Objects.length === 0) {
         showToast('No videos available to remove.', true);
         return;
       }
 
-      if (!confirm(`⚠️ ARE YOU SURE? This will PERMANENTLY REMOVE ALL ${currentS3Objects.length} VIDEOS from AWS S3!`)) {
-        return;
-      }
+      if (!confirm(`⚠️ WARNING: PERMANENTLY DELETE ALL ${currentS3Objects.length} VIDEOS FROM AWS S3?`)) return;
 
       const objectsToDelete = currentS3Objects.map(o => ({ Key: o.Key }));
 
       s3.deleteObjects({
         Bucket: BUCKET_NAME,
         Delete: { Objects: objectsToDelete }
-      }, (err, data) => {
+      }, (err) => {
         if (err) {
           showToast('Failed to remove videos: ' + err.message, true);
         } else {
-          showToast(`🗑️ All ${objectsToDelete.length} videos removed from AWS S3!`);
+          showToast(`🗑️ All ${objectsToDelete.length} videos removed!`);
           loadS3Videos();
         }
       });
@@ -709,6 +903,9 @@
       container.innerHTML = tableHtml;
     }
 
+    // Search and Sort Event Listeners
+    document.getElementById('adminSearchInput').addEventListener('input', renderFilteredVideos);
+    document.getElementById('sortSelect').addEventListener('change', renderFilteredVideos);
     document.getElementById('refreshVideosBtn').addEventListener('click', loadS3Videos);
     document.getElementById('refreshSubmissionsBtn').addEventListener('click', loadSubmissions);
 

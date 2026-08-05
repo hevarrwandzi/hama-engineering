@@ -6,102 +6,132 @@
   <title>Contact Submissions Admin</title>
   <style>
     :root {
-      color-scheme: light;
-      font-family: Arial, Helvetica, sans-serif;
-      --bg: #f7f7f8;
-      --card: #ffffff;
-      --text: #1d2433;
-      --muted: #64748b;
+      --font-family: 'Inter', Arial, Helvetica, sans-serif;
+      color-scheme: dark;
+      --bg: #08101b;
+      --card: rgba(13, 21, 35, 0.96);
+      --surface: #0f1c32;
+      --text: #e8eef7;
+      --muted: #90a6c2;
       --accent: #e87c2a;
-      --border: #e2e8f0;
+      --accent-dark: #c96a1f;
+      --border: rgba(255,255,255,0.08);
+      --shadow: 0 30px 80px rgba(0,0,0,0.32);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      background: var(--bg);
+      min-height: 100vh;
+      background: radial-gradient(circle at top, rgba(232,124,42,0.14), transparent 25%), linear-gradient(180deg, #09111d 0%, #05101a 100%);
       color: var(--text);
       padding: 24px;
+      font-family: var(--font-family);
     }
     .wrap {
-      max-width: 1100px;
+      max-width: 1140px;
       margin: 0 auto;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
       overflow: hidden;
     }
     .header {
-      padding: 24px 28px;
-      border-bottom: 1px solid var(--border);
+      padding: 32px 36px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 16px;
       flex-wrap: wrap;
+      background: rgba(255,255,255,0.03);
     }
-    .header h1 { margin: 0; font-size: 1.4rem; }
-    .header a, button {
-      border: none;
-      background: var(--accent);
-      color: white;
+    .header h1 { margin: 0; font-size: 2rem; letter-spacing: -0.02em; }
+    .header p { margin: 8px 0 0; color: var(--muted); max-width: 620px; line-height: 1.75; }
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
       border-radius: 999px;
-      padding: 10px 14px;
+      border: none;
       cursor: pointer;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
+      transition: transform 0.25s ease, filter 0.25s ease;
     }
-    .content { padding: 24px 28px 28px; }
+    .button.primary { background: linear-gradient(135deg, var(--accent), #f2a659); color: #111; }
+    .button.secondary { background: rgba(255,255,255,0.08); color: var(--text); }
+    .button:hover { transform: translateY(-2px); filter: brightness(1.04); }
+    .content { padding: 32px 36px 36px; }
     .panel {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 18px;
-      background: #fcfdff;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 24px;
+      background: rgba(255,255,255,0.03);
     }
-    .status { margin-bottom: 16px; color: var(--muted); }
+    .status { margin-bottom: 18px; color: var(--muted); }
     .upload-form {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
       align-items: center;
     }
     .upload-form input[type="file"] {
-      border: 1px dashed var(--border);
-      padding: 10px;
-      border-radius: 10px;
-      background: white;
+      flex: 1;
+      min-width: 240px;
+      border: 1px dashed rgba(255,255,255,0.16);
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
     }
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.95rem;
+      color: var(--text);
     }
     th, td {
       text-align: left;
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--border);
+      padding: 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       vertical-align: top;
     }
-    th { background: #f8fafc; color: #334155; }
+    th { background: rgba(255,255,255,0.04); color: #eef3ff; font-weight: 700; }
+    td { background: rgba(255,255,255,0.02); }
     .empty {
-      padding: 20px;
+      padding: 24px;
       text-align: center;
       color: var(--muted);
-      border: 1px dashed var(--border);
-      border-radius: 12px;
-      background: #fcfdff;
+      border: 1px dashed rgba(255,255,255,0.14);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
     }
-    .meta { color: var(--muted); font-size: 0.86rem; }
+    .meta { color: var(--muted); font-size: 0.88rem; }
+    @media (max-width: 760px) {
+      .upload-form { flex-direction: column; align-items: stretch; }
+      .header { padding: 28px 24px; }
+      .content { padding: 28px 24px 28px; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="header">
-      <h1>Contact Submissions</h1>
       <div>
-        <a href="/">Back to Home</a>
-        <button id="refreshBtn" type="button">Refresh</button>
+        <h1>Admin Dashboard</h1>
+        <p>Upload videos and review contact submissions from your website visitors.</p>
+      </div>
+      <div class="header-actions">
+        <a href="/" class="button secondary">Back to Home</a>
+        <button id="refreshBtn" class="button primary" type="button">Refresh Submissions</button>
       </div>
     </div>
     <div class="content">
@@ -186,18 +216,64 @@
         return;
       }
 
-      const formData = new FormData();
-      formData.append('video', file);
-      uploadStatus.textContent = 'Uploading...';
+      uploadStatus.textContent = 'Preparing upload...';
 
       try {
+        // Step 1: Check if S3 Presigned URL mode is enabled
+        const presignRes = await fetch('/api/get-upload-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fileName: file.name, fileType: file.type })
+        });
+        const presignData = await presignRes.json();
+
+        if (presignData.ok && presignData.s3Mode) {
+          // Direct S3 Upload via Presigned Post
+          uploadStatus.textContent = 'Uploading directly to AWS S3... (0%)';
+          
+          const s3FormData = new FormData();
+          Object.entries(presignData.fields).forEach(([key, value]) => {
+            s3FormData.append(key, value);
+          });
+          s3FormData.append('file', file);
+
+          await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', presignData.url);
+            xhr.upload.onprogress = (e) => {
+              if (e.lengthComputable) {
+                const percent = Math.round((e.loaded / e.total) * 100);
+                uploadStatus.textContent = `Uploading to AWS S3... (${percent}%)`;
+              }
+            };
+            xhr.onload = () => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve();
+              } else {
+                reject(new Error(`S3 upload failed with status ${xhr.status}`));
+              }
+            };
+            xhr.onerror = () => reject(new Error('Network error during S3 upload'));
+            xhr.send(s3FormData);
+          });
+
+          uploadStatus.textContent = '🎉 Video uploaded successfully to AWS S3!';
+          fileInput.value = '';
+          return;
+        }
+
+        // Step 2: Fallback to local server upload if S3 is not configured
+        uploadStatus.textContent = 'Uploading to server...';
+        const formData = new FormData();
+        formData.append('video', file);
+
         const response = await fetch('/api/upload-video', {
           method: 'POST',
           body: formData
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || 'Upload failed.');
-        uploadStatus.textContent = result.message || 'Video uploaded successfully.';
+        uploadStatus.textContent = result.message || 'Video uploaded successfully to server.';
         fileInput.value = '';
       } catch (error) {
         uploadStatus.textContent = error.message || 'Upload failed.';

@@ -176,9 +176,11 @@
           for (let i = 0; i < contents.length; i++) {
             const key = contents[i].getElementsByTagName('Key')[0]?.textContent || '';
             const size = parseInt(contents[i].getElementsByTagName('Size')[0]?.textContent || '0');
-            if (size > 0 && (key.endsWith('.mp4') || key.endsWith('.webm') || key.endsWith('.mov'))) {
+            const lowerKey = key.toLowerCase();
+            if (size > 0 && (lowerKey.endsWith('.mp4') || lowerKey.endsWith('.webm') || lowerKey.endsWith('.mov') || lowerKey.endsWith('.m4v') || lowerKey.endsWith('.avi'))) {
               const name = key.replace(/^videos\//, '');
-              s3Videos.push({ name, url: `${s3BucketUrl}/${key}` });
+              const formattedSize = (size / (1024 * 1024)).toFixed(1) + ' MB';
+              s3Videos.push({ name, url: `${s3BucketUrl}/${key}`, size: formattedSize });
             }
           }
 
@@ -196,12 +198,26 @@
 
     function renderVideos(videos) {
       const container = document.getElementById('videos');
-      container.innerHTML = '<div class="grid">' + videos.map(video => `
-        <div class="card">
-          <video controls preload="metadata" src="${video.url}"></video>
-          <p class="card-title">${video.name}</p>
-        </div>
-      `).join('') + '</div>';
+      container.innerHTML = '<div class="grid">' + videos.map(video => {
+        const isMov = video.url.toLowerCase().endsWith('.mov');
+        const mimeType = isMov ? 'video/quicktime' : 'video/mp4';
+        return `
+          <div class="card">
+            <video controls preload="metadata" style="background:#000; width:100%; max-height: 280px; border-radius: 16px 16px 0 0;">
+              <source src="${video.url}" type="${mimeType}">
+              <source src="${video.url}">
+              Your browser does not support playing this video format inline.
+            </video>
+            <div style="padding: 16px;">
+              <p class="card-title" style="margin:0 0 10px; font-weight:700; word-break:break-all;">${video.name}</p>
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                <span style="font-size:0.85rem; color:var(--muted);">${video.size || ''}</span>
+                <a href="${video.url}" target="_blank" download class="button primary" style="padding:6px 14px; font-size:0.85rem;">Play / Open Video ↗</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('') + '</div>';
     }
 
     loadVideos();

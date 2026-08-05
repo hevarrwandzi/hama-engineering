@@ -147,25 +147,61 @@
   <script>
     async function loadVideos() {
       const container = document.getElementById('videos');
+      container.innerHTML = '<div class="empty">Loading video gallery...</div>';
+
       try {
         const response = await fetch('/api/member-videos');
-        const data = await response.json();
-        if (!response.ok || !data.ok) throw new Error(data.message || 'Unable to load videos.');
-
-        if (!data.videos || data.videos.length === 0) {
-          container.innerHTML = '<div class="empty">No videos are available yet.</div>';
-          return;
+        if (response.ok) {
+          const data = await response.json();
+          if (data.ok && data.videos && data.videos.length > 0) {
+            renderVideos(data.videos);
+            return;
+          }
         }
-
-        container.innerHTML = '<div class="grid">' + data.videos.map(video => `
-          <div class="card">
-            <video controls preload="metadata" src="${video.url}"></video>
-            <p>${video.name}</p>
-          </div>
-        `).join('') + '</div>';
-      } catch (error) {
-        container.innerHTML = '<div class="empty">' + (error.message || 'Unable to load videos.') + '</div>';
+      } catch (e) {
+        console.log('[S3 Direct Video Listing Mode]');
       }
+
+      // Fallback: Query S3 video bucket directly (XML endpoint)
+      try {
+        const s3BucketUrl = 'https://hama-engineering-videos.s3.eu-north-1.amazonaws.com';
+        const s3Res = await fetch(`${s3BucketUrl}?list-type=2`);
+        if (s3Res.ok) {
+          const xmlText = await s3Res.text();
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+          const contents = xmlDoc.getElementsByTagName('Contents');
+          const s3Videos = [];
+
+          for (let i = 0; i < contents.length; i++) {
+            const key = contents[i].getElementsByTagName('Key')[0]?.textContent || '';
+            const size = parseInt(contents[i].getElementsByTagName('Size')[0]?.textContent || '0');
+            if (size > 0 && (key.endsWith('.mp4') || key.endsWith('.webm') || key.endsWith('.mov'))) {
+              const name = key.replace(/^videos\//, '');
+              s3Videos.push({ name, url: `${s3BucketUrl}/${key}` });
+            }
+          }
+
+          if (s3Videos.length > 0) {
+            renderVideos(s3Videos);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error('S3 Direct fetch error:', err);
+      }
+
+      container.innerHTML = '<div class="empty">No videos uploaded yet. Admin can upload videos from the Admin Dashboard.</div>';
+    }
+
+    function renderVideos(videos) {
+      const container = document.getElementById('videos');
+      container.innerHTML = '<div class="grid">' + videos.map(video => `
+        <div class="card">
+          <video controls preload="metadata" src="${video.url}"></video>
+          <p class="card-title">${video.name}</p>
+        </div>
+      `).join('') + '</div>';
     }
 
     loadVideos();

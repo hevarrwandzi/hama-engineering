@@ -139,51 +139,6 @@
       border: 1px solid rgba(16, 185, 129, 0.3);
       color: #10b981;
     }
-    .quick-login-wrap {
-      margin-top: 28px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-    }
-    .quick-title {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      text-align: center;
-      margin-bottom: 14px;
-    }
-    .quick-btns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .btn-quick {
-      padding: 11px 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      font-weight: 700;
-      font-size: 0.88rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
-    .btn-quick span {
-      font-size: 0.72rem;
-      font-weight: 500;
-      color: var(--muted);
-    }
-    .btn-quick:hover {
-      border-color: var(--accent);
-      background: rgba(255,107,0,0.12);
-      color: var(--accent-light);
-      transform: translateY(-2px);
-    }
     .footer-nav {
       margin-top: 24px;
       text-align: center;
@@ -210,7 +165,7 @@
     <form id="loginForm">
       <div class="input-group">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="e.g. admin or member" required autocomplete="username" />
+        <input type="text" id="username" name="username" placeholder="Enter username" required autocomplete="username" />
       </div>
       <div class="input-group">
         <label for="password">Password</label>
@@ -220,20 +175,6 @@
     </form>
 
     <div id="message" class="message"></div>
-
-    <div class="quick-login-wrap">
-      <div class="quick-title">⚡ Quick Access Buttons</div>
-      <div class="quick-btns">
-        <button type="button" class="btn-quick" onclick="quickLogin('admin', 'admin123')">
-          🔑 Admin Mode
-          <span>admin / admin123</span>
-        </button>
-        <button type="button" class="btn-quick" onclick="quickLogin('member', 'member123')">
-          🎬 Member Mode
-          <span>member / member123</span>
-        </button>
-      </div>
-    </div>
   </div>
 
   <div class="footer-nav">
@@ -290,7 +231,7 @@
         setMessage('Login successful! Redirecting to Member Gallery...', 'success');
         setTimeout(() => { window.location.href = 'member.html'; }, 400);
       } else {
-        setMessage('Invalid username or password. Please use admin / admin123 or member / member123.', 'error');
+        setMessage('Invalid username or password.', 'error');
       }
     }
 
@@ -300,12 +241,6 @@
       const password = document.getElementById('password').value;
       executeLogin(username, password);
     });
-
-    function quickLogin(user, pass) {
-      document.getElementById('username').value = user;
-      document.getElementById('password').value = pass;
-      executeLogin(user, pass);
-    }
   </script>
 </body>
 </html>

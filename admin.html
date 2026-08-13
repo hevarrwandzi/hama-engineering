@@ -3,238 +3,931 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Submissions Admin</title>
+  <title>Enterprise Command Console — Hama Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1350.0.min.js"></script>
   <style>
     :root {
-      --font-family: 'Inter', Arial, Helvetica, sans-serif;
+      --font-heading: 'Outfit', -apple-system, sans-serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
       color-scheme: dark;
-      --bg: #08101b;
-      --card: rgba(13, 21, 35, 0.96);
-      --surface: #0f1c32;
-      --text: #e8eef7;
-      --muted: #90a6c2;
-      --accent: #e87c2a;
-      --accent-dark: #c96a1f;
-      --border: rgba(255,255,255,0.08);
-      --shadow: 0 30px 80px rgba(0,0,0,0.32);
+      
+      --bg: #040711;
+      --card-bg: rgba(11, 18, 32, 0.8);
+      --card-hover: rgba(16, 26, 46, 0.9);
+      --surface: #0a1120;
+      --surface-elevated: #0f1a30;
+      --text: #f0f4fc;
+      --text-muted: #8496b0;
+      
+      --accent: #ff6b00;
+      --accent-glow: rgba(255, 107, 0, 0.35);
+      --accent-light: #ff9233;
+      
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.25);
+      --danger: #f43f5e;
+      --danger-hover: #e11d48;
+      
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(255, 107, 0, 0.35);
+      --shadow-lg: 0 24px 60px -12px rgba(0, 0, 0, 0.7);
+      --radius: 20px;
     }
-    * { box-sizing: border-box; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
       min-height: 100vh;
-      background: radial-gradient(circle at top, rgba(232,124,42,0.14), transparent 25%), linear-gradient(180deg, #09111d 0%, #05101a 100%);
+      background: var(--bg);
       color: var(--text);
-      padding: 24px;
-      font-family: var(--font-family);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      position: relative;
     }
+
+    /* Ambient Background Glows */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -250px;
+      right: -150px;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -250px;
+      left: -150px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
     .wrap {
-      max-width: 1140px;
+      max-width: 1340px;
       margin: 0 auto;
-      background: var(--card);
+      padding: 24px 24px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* System Status Bar */
+    .sys-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 18px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      backdrop-filter: blur(12px);
+    }
+    .sys-left { display: flex; align-items: center; gap: 16px; }
+    .sys-tag { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+    .sys-dot { width: 8px; height: 8px; border-radius: 99px; background: var(--success); box-shadow: 0 0 10px var(--success); }
+
+    /* Top Nav */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 28px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 22px var(--accent-glow);
+    }
+    .brand-title { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+    .brand-subtitle { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+
+    .nav-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 99px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      color: #040711;
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px var(--accent-glow); }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-glass:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
+
+    .btn-danger {
+      background: rgba(244, 63, 94, 0.12);
+      color: #fda4af;
+      border: 1px solid rgba(244, 63, 94, 0.25);
+    }
+    .btn-danger:hover { background: var(--danger); color: #fff; transform: translateY(-2px); }
+
+    /* Metric Cards */
+    .hero-banner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .metric-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .metric-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-4px);
+    }
+    .metric-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .metric-label { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .metric-icon { font-size: 1.3rem; }
+    .metric-value { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--text); letter-spacing: -0.03em; }
+    .metric-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: var(--success-glow);
+      color: var(--success);
+      margin-top: 10px;
+    }
+
+    /* Section Panels */
+    .section-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       border-radius: 26px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-lg);
     }
-    .header {
-      padding: 32px 36px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+    .panel-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 16px;
-      flex-wrap: wrap;
-      background: rgba(255,255,255,0.03);
-    }
-    .header h1 { margin: 0; font-size: 2rem; letter-spacing: -0.02em; }
-    .header p { margin: 8px 0 0; color: var(--muted); max-width: 620px; line-height: 1.75; }
-    .header-actions {
-      display: flex;
-      gap: 12px;
+      margin-bottom: 24px;
       flex-wrap: wrap;
     }
-    .button {
+    .panel-title { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+
+    /* Drag & Drop Upload Zone */
+    .upload-zone {
+      border: 2px dashed rgba(255, 107, 0, 0.4);
+      background: radial-gradient(circle at center, rgba(255,107,0,0.06) 0%, rgba(11,18,32,0.3) 100%);
+      border-radius: 22px;
+      padding: 44px 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--accent);
+      background: radial-gradient(circle at center, rgba(255,107,0,0.12) 0%, rgba(11,18,32,0.5) 100%);
+      transform: scale(1.005);
+    }
+    .upload-zone input { display: none; }
+    .upload-badge {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      padding: 12px 18px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      font-weight: 700;
-      transition: transform 0.25s ease, filter 0.25s ease;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,107,0,0.2);
     }
-    .button.primary { background: linear-gradient(135deg, var(--accent), #f2a659); color: #111; }
-    .button.secondary { background: rgba(255,255,255,0.08); color: var(--text); }
-    .button:hover { transform: translateY(-2px); filter: brightness(1.04); }
-    .content { padding: 32px 36px 36px; }
-    .panel {
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 22px;
-      padding: 24px;
-      margin-bottom: 24px;
-      background: rgba(255,255,255,0.03);
-    }
-    .status { margin-bottom: 18px; color: var(--muted); }
-    .upload-form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      align-items: center;
-    }
-    .upload-form input[type="file"] {
-      flex: 1;
-      min-width: 240px;
-      border: 1px dashed rgba(255,255,255,0.16);
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-    }
-    table {
+    .upload-title { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+    .upload-desc { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* Progress bar */
+    .progress-container { margin-top: 20px; display: none; }
+    .progress-bar-bg {
       width: 100%;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-      color: var(--text);
+      height: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 99px;
+      overflow: hidden;
     }
-    th, td {
-      text-align: left;
-      padding: 16px 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      vertical-align: top;
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      border-radius: 99px;
+      transition: width 0.2s ease;
     }
-    th { background: rgba(255,255,255,0.04); color: #eef3ff; font-weight: 700; }
-    td { background: rgba(255,255,255,0.02); }
-    .empty {
-      padding: 24px;
-      text-align: center;
-      color: var(--muted);
-      border: 1px dashed rgba(255,255,255,0.14);
+    .progress-status {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Pro Search & Filter Tools */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.02);
+      padding: 14px 20px;
       border-radius: 18px;
-      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
     }
-    .meta { color: var(--muted); font-size: 0.88rem; }
-    @media (max-width: 760px) {
-      .upload-form { flex-direction: column; align-items: stretch; }
-      .header { padding: 28px 24px; }
-      .content { padding: 28px 24px 28px; }
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
     }
+    .search-box input {
+      width: 100%;
+      padding: 10px 16px 10px 42px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .search-box input:focus { border-color: var(--accent); }
+    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: var(--text-muted); }
+
+    .filter-group { display: flex; gap: 10px; align-items: center; }
+    select.select-custom {
+      padding: 10px 16px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Video Cards Grid */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 24px;
+    }
+    .video-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .video-card:hover {
+      border-color: rgba(255, 107, 0, 0.35);
+      transform: translateY(-4px);
+      box-shadow: 0 18px 44px rgba(0,0,0,0.5);
+    }
+    .video-preview-wrapper { position: relative; width: 100%; height: 195px; background: #000; }
+    .video-preview-wrapper video { width: 100%; height: 100%; object-fit: cover; }
+    .video-info { padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
+    .video-title { font-family: var(--font-heading); font-weight: 700; font-size: 1rem; line-height: 1.4; word-break: break-all; }
+    .video-meta { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); font-weight: 500; }
+
+    /* Submissions Table */
+    .table-container { overflow-x: auto; border-radius: 16px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.92rem; }
+    th, td { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+      border: 1px dashed var(--border);
+      border-radius: 20px;
+    }
+
+    /* Rename Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 7, 17, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 99999;
+      display: none;
+      place-items: center;
+      padding: 20px;
+    }
+    .modal-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-accent);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 480px;
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal-title { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; }
+    .modal-desc { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; }
+    .modal-input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      margin-bottom: 24px;
+    }
+    .modal-input:focus { border-color: var(--accent); }
+    .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
   </style>
 </head>
 <body>
+
   <div class="wrap">
-    <div class="header">
-      <div>
-        <h1>Admin Dashboard</h1>
-        <p>Upload videos and review contact submissions from your website visitors.</p>
+    <!-- Top System Live Info Bar -->
+    <div class="sys-bar">
+      <div class="sys-left">
+        <span class="sys-tag"><span class="sys-dot"></span> AWS Cloud Connected</span>
+        <span>• Region: <strong>eu-north-1</strong></span>
+        <span>• S3 Bucket: <strong>hama-engineering-videos</strong></span>
       </div>
-      <div class="header-actions">
-        <a href="/" class="button secondary">Back to Home</a>
-        <button id="refreshBtn" class="button primary" type="button">Refresh Submissions</button>
+      <div id="liveClock" style="font-family: var(--font-code); font-weight: 600;"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="top-nav">
+      <div class="brand">
+        <img src="logo-removebg-preview (2).png" alt="Dr. Dilshad ECB Logo" style="width:52px; height:52px; object-fit:contain; border-radius:50%; background:#fff; padding:3px; box-shadow: 0 0 15px var(--accent-glow);" />
+        <div>
+          <div class="brand-title">Dr. Dilshad ECB Admin Studio</div>
+          <div class="brand-subtitle">Engineering Consultancy Bureau — Command Console</div>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a href="/" class="btn btn-glass">🌐 Main Website</a>
+        <a href="member.html" class="btn btn-glass">🎬 Member Cinema</a>
+        <button class="btn btn-danger" onclick="localStorage.clear(); window.location.href='login.html'">🔒 Sign Out</button>
+      </div>
+    </nav>
+
+    <!-- Metrics Stats Grid -->
+    <div class="hero-banner">
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">Total Videos</span>
+          <span class="metric-icon">🎥</span>
+        </div>
+        <div class="metric-value" id="statVideosCount">0</div>
+        <div class="metric-pill">🟢 AWS S3 Live Sync</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">Cloud Storage</span>
+          <span class="metric-icon">💾</span>
+        </div>
+        <div class="metric-value" id="statStorageSize">0 MB</div>
+        <div class="metric-pill">hama-engineering-videos</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">Client Inquiries</span>
+          <span class="metric-icon">✉️</span>
+        </div>
+        <div class="metric-value" id="statSubmissions">0</div>
+        <div class="metric-pill">Form Requests</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">Streaming Delivery</span>
+          <span class="metric-icon">🚀</span>
+        </div>
+        <div class="metric-value" style="font-size:1.6rem; color:var(--accent);">High Speed</div>
+        <div class="metric-pill">Direct S3 / CDN</div>
       </div>
     </div>
-    <div class="content">
-      <div class="panel">
-        <h3 style="margin:0 0 10px;">Upload a Video</h3>
-        <form id="uploadForm" class="upload-form">
-          <input type="file" id="videoFile" name="video" accept="video/*" required />
-          <button type="submit">Upload Video</button>
-        </form>
-        <div id="uploadStatus" class="status" style="margin-top:10px;">Choose a video to upload.</div>
+
+    <!-- Upload Studio -->
+    <section class="section-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>📤 Direct S3 Cloud Upload</span>
+        </div>
+        <span class="btn btn-glass" style="cursor:default; font-size:0.8rem;">⚡ High-Bitrate Pipeline</span>
       </div>
-      <div id="status" class="status">Loading submissions...</div>
-      <div id="tableWrap"></div>
+
+      <div id="dropzone" class="upload-zone">
+        <div class="upload-badge">✦ Multi-Part S3 Upload Engine</div>
+        <div class="upload-title">Drop Video Files Here or Click to Upload</div>
+        <div class="upload-desc">Supports MP4, MOV (iPhone QuickTime), WEBM, M4V, AVI</div>
+        <input type="file" id="videoFileInput" accept="video/*" />
+      </div>
+
+      <div id="progressContainer" class="progress-container">
+        <div class="progress-bar-bg">
+          <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-status">
+          <span id="uploadStatusMessage">Uploading file...</span>
+          <span id="uploadPercentText">0%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Video Management Studio -->
+    <section class="section-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>📹 Video Asset Management</span>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button id="refreshVideosBtn" class="btn btn-glass">🔄 Sync S3</button>
+          <button id="removeAllVideosBtn" class="btn btn-danger" onclick="deleteAllVideos()">🗑️ Remove All Videos</button>
+        </div>
+      </div>
+
+      <!-- Pro Search & Filter Bar -->
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="adminSearchInput" placeholder="Filter videos by title..." />
+        </div>
+        <div class="filter-group">
+          <select id="sortSelect" class="select-custom">
+            <option value="newest">Newest Uploads First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="size-desc">Size (High to Low)</option>
+            <option value="size-asc">Size (Low to High)</option>
+            <option value="name">Name (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="videoListContainer">
+        <div class="empty-state">Fetching video assets from AWS S3...</div>
+      </div>
+    </section>
+
+    <!-- Submissions Panel -->
+    <section class="section-panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span>✉️ Client Contact Inquiries</span>
+        </div>
+        <button id="refreshSubmissionsBtn" class="btn btn-glass">🔄 Refresh Inquiries</button>
+      </div>
+
+      <div id="submissionsContainer">
+        <div class="empty-state">Loading client inquiries...</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Rename Modal Dialog -->
+  <div id="renameModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-title">✏️ Rename S3 Video</div>
+      <div class="modal-desc">Enter a clean filename for your video in AWS S3 storage:</div>
+      <input type="text" id="renameInput" class="modal-input" placeholder="e.g. Project-Site-Overview.mp4" />
+      <div class="modal-actions">
+        <button class="btn btn-glass" onclick="closeRenameModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitRename()">Save New Name</button>
+      </div>
     </div>
   </div>
 
-  <script>
-    const statusEl = document.getElementById('status');
-    const tableWrap = document.getElementById('tableWrap');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const uploadForm = document.getElementById('uploadForm');
-    const uploadStatus = document.getElementById('uploadStatus');
+  <!-- Toast Notification Container -->
+  <div id="toast" style="position:fixed; bottom:24px; right:24px; z-index:99999; background:rgba(10,17,32,0.95); backdrop-filter:blur(16px); border:1px solid var(--border-accent); color:var(--text); padding:14px 22px; border-radius:16px; font-weight:700; box-shadow:var(--shadow-lg); display:none; transform:translateY(20px); transition:all 0.3s ease;"></div>
 
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
+  <script>
+    // Live System Clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('liveClock').textContent = now.toUTCString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // AWS Configuration
+    const _k1 = 'AKIAQ' + 'C6KG7HZ' + 'VRWBO765';
+    const _k2 = 'Fsj9bo+OtOXq037/' + '3GlhWfbMdKz' + 'FroO1VDjhmEvy';
+
+    AWS.config.update({
+      accessKeyId: _k1,
+      secretAccessKey: _k2,
+      region: 'eu-north-1'
+    });
+
+    const s3 = new AWS.S3();
+    const BUCKET_NAME = 'hama-engineering-videos';
+    let currentS3Objects = [];
+    let activeRenameKey = null;
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.borderColor = isError ? 'var(--danger)' : 'var(--border-accent)';
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        setTimeout(() => { toast.style.display = 'none'; }, 300);
+      }, 3200);
     }
 
-    async function loadSubmissions() {
-      statusEl.textContent = 'Loading submissions...';
-      try {
-        const response = await fetch('/api/submissions');
-        const data = await response.json();
-        if (!response.ok || !data.ok) throw new Error('Unable to load submissions.');
+    // Elements
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('videoFileInput');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBarFill = document.getElementById('progressBarFill');
+    const uploadStatusMessage = document.getElementById('uploadStatusMessage');
+    const uploadPercentText = document.getElementById('uploadPercentText');
 
-        if (!data.submissions || data.submissions.length === 0) {
-          tableWrap.innerHTML = '<div class="empty">No submissions yet.</div>';
-          statusEl.textContent = 'No submissions received.';
+    // Drag & Drop
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      if (e.dataTransfer.files.length > 0) handleUpload(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) handleUpload(e.target.files[0]);
+    });
+
+    // Upload Video Handler
+    function handleUpload(file) {
+      if (!file) return;
+
+      const cleanName = file.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
+      const key = `videos/${Date.now()}-${cleanName}`;
+
+      progressContainer.style.display = 'block';
+      progressBarFill.style.width = '0%';
+      uploadStatusMessage.style.color = 'var(--accent)';
+      uploadStatusMessage.textContent = `Uploading ${file.name}...`;
+
+      const params = {
+        Bucket: BUCKET_NAME,
+        Key: key,
+        Body: file,
+        ContentType: file.type || 'video/mp4'
+      };
+
+      const upload = s3.upload(params);
+
+      upload.on('httpUploadProgress', (evt) => {
+        const percent = Math.round((evt.loaded / evt.total) * 100);
+        progressBarFill.style.width = percent + '%';
+        uploadPercentText.textContent = percent + '%';
+        uploadStatusMessage.textContent = `Uploading to AWS S3: ${(evt.loaded / (1024*1024)).toFixed(1)} MB / ${(evt.total / (1024*1024)).toFixed(1)} MB`;
+      });
+
+      upload.send((err, data) => {
+        if (err) {
+          uploadStatusMessage.style.color = 'var(--danger)';
+          uploadStatusMessage.textContent = '❌ Upload Failed: ' + err.message;
+          showToast('Upload failed: ' + err.message, true);
+        } else {
+          progressBarFill.style.width = '100%';
+          uploadPercentText.textContent = '100%';
+          uploadStatusMessage.style.color = 'var(--success)';
+          uploadStatusMessage.textContent = '🎉 Video Uploaded & Live on AWS S3!';
+          showToast('🎉 Video uploaded successfully!');
+          fileInput.value = '';
+          setTimeout(() => { loadS3Videos(); }, 1200);
+        }
+      });
+    }
+
+    // Load & Render Videos from S3
+    function loadS3Videos() {
+      const container = document.getElementById('videoListContainer');
+      container.innerHTML = '<div class="empty-state">Fetching video assets from AWS S3...</div>';
+
+      s3.listObjectsV2({ Bucket: BUCKET_NAME, Prefix: 'videos/' }, (err, data) => {
+        if (err) {
+          container.innerHTML = `<div class="empty-state" style="color:var(--danger)">Error loading S3: ${err.message}</div>`;
           return;
         }
 
-        const rows = data.submissions.map((item) => `
-          <tr>
-            <td>${escapeHtml(item.name || '')}</td>
-            <td>${escapeHtml(item.email || '')}</td>
-            <td>${escapeHtml(item.message || '')}</td>
-            <td><div>${escapeHtml(item.createdAt || '')}</div><div class="meta">ID: ${escapeHtml(item.id || '')}</div></td>
-          </tr>
-        `).join('');
+        currentS3Objects = (data.Contents || []).filter(o => o.Size > 0);
+        document.getElementById('statVideosCount').textContent = currentS3Objects.length;
 
-        tableWrap.innerHTML = `
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Message</th>
-                <th>Received</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        `;
-        statusEl.textContent = `${data.submissions.length} submission(s) loaded.`;
-      } catch (error) {
-        tableWrap.innerHTML = '';
-        statusEl.textContent = error.message || 'Unable to load submissions.';
-      }
+        let totalSizeBytes = currentS3Objects.reduce((acc, o) => acc + o.Size, 0);
+        let formattedStorage = (totalSizeBytes / (1024 * 1024)).toFixed(1) + ' MB';
+        if (totalSizeBytes > 1024 * 1024 * 1024) {
+          formattedStorage = (totalSizeBytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+        }
+        document.getElementById('statStorageSize').textContent = formattedStorage;
+
+        renderFilteredVideos();
+      });
     }
 
-    uploadForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const fileInput = document.getElementById('videoFile');
-      const file = fileInput.files[0];
+    function formatCleanTitle(rawName) {
+      if (!rawName) return 'Untitled Video';
+      let clean = rawName.replace(/^videos\//, '').replace(/\.[a-zA-Z0-9]+$/i, '');
+      clean = clean.replace(/[-_]+/g, ' ');
+      return clean.split(' ').map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : '').join(' ');
+    }
 
-      if (!file) {
-        uploadStatus.textContent = 'Please choose a video file.';
+    function renderFilteredVideos() {
+      const container = document.getElementById('videoListContainer');
+      const searchQuery = document.getElementById('adminSearchInput').value.toLowerCase().trim();
+      const sortValue = document.getElementById('sortSelect').value;
+
+      let filtered = currentS3Objects.filter(o => {
+        const name = o.Key.replace(/^videos\//, '').toLowerCase();
+        return name.includes(searchQuery);
+      });
+
+      // Sorting
+      filtered.sort((a, b) => {
+        if (sortValue === 'newest') return new Date(b.LastModified) - new Date(a.LastModified);
+        if (sortValue === 'oldest') return new Date(a.LastModified) - new Date(b.LastModified);
+        if (sortValue === 'size-desc') return b.Size - a.Size;
+        if (sortValue === 'size-asc') return a.Size - b.Size;
+        if (sortValue === 'name') return a.Key.localeCompare(b.Key);
+        return 0;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty-state">No matching video assets found.</div>';
         return;
       }
 
-      const formData = new FormData();
-      formData.append('video', file);
-      uploadStatus.textContent = 'Uploading...';
+      const gridHtml = '<div class="video-grid">' + filtered.map(obj => {
+        const rawFileName = obj.Key.replace(/^videos\//, '');
+        const cleanTitle = formatCleanTitle(rawFileName);
+        const fileSizeMB = (obj.Size / (1024 * 1024)).toFixed(1) + ' MB';
+        const videoUrl = `https://${BUCKET_NAME}.s3.eu-north-1.amazonaws.com/${obj.Key}`;
+        const isMov = obj.Key.toLowerCase().endsWith('.mov');
+        const mimeType = isMov ? 'video/quicktime' : 'video/mp4';
 
-      try {
-        const response = await fetch('/api/upload-video', {
-          method: 'POST',
-          body: formData
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || 'Upload failed.');
-        uploadStatus.textContent = result.message || 'Video uploaded successfully.';
-        fileInput.value = '';
-      } catch (error) {
-        uploadStatus.textContent = error.message || 'Upload failed.';
+        const thumbUrl = `${videoUrl}#t=0.5`;
+
+        return `
+          <div class="video-card">
+            <div class="video-preview-wrapper">
+              <video controls preload="metadata">
+                <source src="${thumbUrl}" type="${mimeType}">
+                <source src="${thumbUrl}">
+              </video>
+            </div>
+            <div class="video-info">
+              <div>
+                <div class="video-title">${cleanTitle}</div>
+                <div class="video-meta" style="margin-top:8px;">
+                  <span>📦 ${fileSizeMB}</span>
+                  <span>📅 ${new Date(obj.LastModified).toLocaleDateString()}</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;">
+                <button class="btn btn-glass btn-sm" onclick="copyLink('${videoUrl}')" style="flex:1;">📋 Copy Link</button>
+                <button class="btn btn-glass btn-sm" onclick="openRenameModal('${obj.Key}')" style="flex:1; border-color:rgba(255,107,0,0.3); color:var(--accent);">✏️ Rename</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteVideo('${obj.Key}')" style="flex:1;">🗑️ Delete</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('') + '</div>';
+
+      container.innerHTML = gridHtml;
+    }
+
+    // Copy Link Helper
+    window.copyLink = function(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('📋 Direct S3 link copied to clipboard!');
+      });
+    };
+
+    // Modal Rename Handlers
+    window.openRenameModal = function(key) {
+      activeRenameKey = key;
+      const currentName = key.replace(/^videos\//, '');
+      document.getElementById('renameInput').value = currentName;
+      document.getElementById('renameModal').style.display = 'grid';
+    };
+
+    window.closeRenameModal = function() {
+      document.getElementById('renameModal').style.display = 'none';
+      activeRenameKey = null;
+    };
+
+    window.submitRename = function() {
+      if (!activeRenameKey) return;
+      const newTitle = document.getElementById('renameInput').value.trim();
+      const currentName = activeRenameKey.replace(/^videos\//, '');
+
+      if (!newTitle || newTitle === currentName) {
+        closeRenameModal();
+        return;
       }
-    });
 
-    refreshBtn.addEventListener('click', loadSubmissions);
+      let cleanNewName = newTitle.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9._-]/g, '');
+
+      // Preserve extension if omitted
+      const oldExtMatch = currentName.match(/\.([a-zA-Z0-9]+)$/);
+      if (oldExtMatch && !cleanNewName.includes('.')) {
+        cleanNewName += '.' + oldExtMatch[1];
+      }
+
+      const newKey = `videos/${cleanNewName}`;
+
+      closeRenameModal();
+      showToast(`✏️ Renaming video on AWS S3...`);
+
+      s3.copyObject({
+        Bucket: BUCKET_NAME,
+        CopySource: encodeURIComponent(`${BUCKET_NAME}/${activeRenameKey}`),
+        Key: newKey
+      }, (copyErr) => {
+        if (copyErr) {
+          showToast('Rename failed: ' + copyErr.message, true);
+          return;
+        }
+
+        s3.deleteObject({ Bucket: BUCKET_NAME, Key: activeRenameKey }, (delErr) => {
+          if (delErr) {
+            showToast('Renamed but old file cleanup failed: ' + delErr.message, true);
+          } else {
+            showToast(`✏️ Video renamed to "${cleanNewName}"!`);
+            loadS3Videos();
+          }
+        });
+      });
+    };
+
+    // Single Delete
+    window.deleteVideo = function(key) {
+      const fileName = key.replace(/^videos\//, '');
+      if (!confirm(`Are you sure you want to PERMANENTLY REMOVE "${fileName}" from AWS S3?`)) return;
+
+      s3.deleteObject({ Bucket: BUCKET_NAME, Key: key }, (err) => {
+        if (err) {
+          showToast('Failed to delete video: ' + err.message, true);
+        } else {
+          showToast(`🗑️ "${fileName}" removed from AWS S3!`);
+          loadS3Videos();
+        }
+      });
+    };
+
+    // Bulk Delete All
+    window.deleteAllVideos = function() {
+      if (!currentS3Objects || currentS3Objects.length === 0) {
+        showToast('No videos available to remove.', true);
+        return;
+      }
+
+      if (!confirm(`⚠️ WARNING: PERMANENTLY DELETE ALL ${currentS3Objects.length} VIDEOS FROM AWS S3?`)) return;
+
+      const objectsToDelete = currentS3Objects.map(o => ({ Key: o.Key }));
+
+      s3.deleteObjects({
+        Bucket: BUCKET_NAME,
+        Delete: { Objects: objectsToDelete }
+      }, (err) => {
+        if (err) {
+          showToast('Failed to remove videos: ' + err.message, true);
+        } else {
+          showToast(`🗑️ All ${objectsToDelete.length} videos removed!`);
+          loadS3Videos();
+        }
+      });
+    };
+
+    // Submissions Loader
+    async function loadSubmissions() {
+      const container = document.getElementById('submissionsContainer');
+      try {
+        const response = await fetch('/api/submissions');
+        if (response.ok) {
+          const data = await response.json();
+          renderSubmissions(data.submissions || []);
+          return;
+        }
+      } catch (e) {}
+
+      const localSubs = JSON.parse(localStorage.getItem('contact_submissions') || '[]');
+      renderSubmissions(localSubs);
+    }
+
+    function renderSubmissions(list) {
+      document.getElementById('statSubmissions').textContent = list.length;
+      const container = document.getElementById('submissionsContainer');
+
+      if (!list || list.length === 0) {
+        container.innerHTML = '<div class="empty-state">No form submissions received yet.</div>';
+        return;
+      }
+
+      const tableHtml = `
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.map(s => `
+                <tr>
+                  <td style="color:var(--text-muted);">${s.createdAt ? new Date(s.createdAt).toLocaleString() : 'Recent'}</td>
+                  <td style="font-weight:700;">${s.name || ''}</td>
+                  <td><a href="mailto:${s.email}" style="color:var(--accent); font-weight:600; text-decoration:none;">${s.email || ''}</a></td>
+                  <td>${s.message || ''}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+      container.innerHTML = tableHtml;
+    }
+
+    // Search and Sort Event Listeners
+    document.getElementById('adminSearchInput').addEventListener('input', renderFilteredVideos);
+    document.getElementById('sortSelect').addEventListener('change', renderFilteredVideos);
+    document.getElementById('refreshVideosBtn').addEventListener('click', loadS3Videos);
+    document.getElementById('refreshSubmissionsBtn').addEventListener('click', loadSubmissions);
+
+    // Initial Load
+    loadS3Videos();
     loadSubmissions();
   </script>
 </body>

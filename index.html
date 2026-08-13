@@ -367,6 +367,83 @@ nav {
 }
 .service-card ul li:first-child { border-top: none; }
 
+/* ── Projects ─────────────────────────────────────────── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 22px;
+}
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  box-shadow: var(--shadow);
+}
+.project-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+}
+.project-image {
+  height: 220px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.project-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(15,30,53,0.7), rgba(15,30,53,0.1));
+}
+.project-content {
+  padding: 20px 18px 22px;
+}
+.project-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(232,124,42,0.1);
+  padding: 5px 9px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.project-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+.project-card p {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+.project-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 28px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: rgba(232,124,42,0.1);
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid rgba(232,124,42,0.2);
+  transition: transform var(--transition), background var(--transition);
+}
+.project-more:hover {
+  background: rgba(232,124,42,0.14);
+  transform: translateX(3px);
+}
+.project-more i { font-size: 0.75rem; }
+
 /* ── About ─────────────────────────────────────────────── */
 .about-inner {
   max-width: 760px;
@@ -678,6 +755,7 @@ footer {
     <div class="nav-links" id="nav-links">
       <a href="#" class="active">Home</a>
       <a href="#services">Services</a>
+      <a href="#projects">Projects</a>
       <a href="#about">About</a>
       <a href="#team">Team</a>
       <a href="#partners">Partners</a>
@@ -788,6 +866,55 @@ footer {
       <ul><li>Professional Training Programs</li><li>Technical Workshops</li></ul>
     </a>
 
+  </div>
+</div>
+
+<!-- ── Projects ── -->
+<div id="projects" class="section-wrap">
+  <h2>Featured Projects</h2>
+  <div class="section-divider"></div>
+  <div class="projects-grid">
+
+    <article class="project-card">
+      <div class="project-image" style="background-image: url('photos/ADMIN.MONUMENT.jpg');"></div>
+      <div class="project-content">
+        <span class="project-tag">Structural</span>
+        <h3>Monument Project</h3>
+        <p>Architectural and structural coordination for a distinctive landmark development with a strong civic identity.</p>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <div class="project-image" style="background-image: url('photos/KANI ALMANI-1.jpg');"></div>
+      <div class="project-content">
+        <span class="project-tag">Civil</span>
+        <h3>Kani Almani</h3>
+        <p>Large-scale civil planning and site engineering support focused on durable infrastructure and efficient buildability.</p>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <div class="project-image" style="background-image: url('photos/PRIVATE HOUSE-1.jpg');"></div>
+      <div class="project-content">
+        <span class="project-tag">MEP</span>
+        <h3>Private Residence</h3>
+        <p>Residential engineering solutions combining modern comfort, performance, and integrated utility planning.</p>
+      </div>
+    </article>
+
+    <article class="project-card">
+      <div class="project-image" style="background-image: url('photos/TOURISM HOUSE 2.jpg');"></div>
+      <div class="project-content">
+        <span class="project-tag">Consultancy</span>
+        <h3>Tourism House</h3>
+        <p>Mixed-use project consultancy blending hospitality design, structural reliability, and long-term serviceability.</p>
+      </div>
+    </article>
+
+  </div>
+
+  <div style="text-align: center;">
+    <a href="#contact" class="project-more">View more <i class="fas fa-arrow-right"></i></a>
   </div>
 </div>
 
